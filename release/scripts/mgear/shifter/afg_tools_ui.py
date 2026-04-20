@@ -49,7 +49,7 @@ from mgear.vendor.Qt import QtWidgets
 # reload(relative_guide_placement)
 
 # constants -------------------------------------------------------------------
-WINDOW_TITLE = "Auto Fit Guide Tools (AFG)"
+WINDOW_TITLE = "自动适配指南工具 (AFG)"
 AFB_FILE_EXTENSION = "afg"
 RELATIVE_FILE_EXTENSION = "rgp"
 
@@ -157,10 +157,10 @@ def _guideRootNode():
     if num_of_guides == 1:
         return guides[0]
     elif num_of_guides > 1:
-        msg = "Too many guides found! {}".format(num_of_guides)
+        msg = "找到太多指南！{}".format(num_of_guides)
         raise ValueError(msg)
     else:
-        msg = "No guides found!"
+        msg = "未找到指南！"
         raise ValueError(msg)
 
 
@@ -278,7 +278,7 @@ class SelectComboBoxRefreshWidget(QtWidgets.QWidget):
         self.mainLayout.setSpacing(0)
         self.mainLayout.setContentsMargins(0, 0, 0, 0)
 
-        msg = "Enter Mesh Name..."
+        msg = "输入网格名称..."
         self.selected_mesh_ledit = PathObjectExistsEdit(
             text=None,
             default_value=default_value,
@@ -286,8 +286,8 @@ class SelectComboBoxRefreshWidget(QtWidgets.QWidget):
             placeholderText=msg)
         self.selected_mesh_ledit.setMinimumHeight(24 + 2)
         self.select_src_mesh_btn = QtWidgets.QPushButton()
-        self.select_src_mesh_btn.setStatusTip("Select Source Mesh")
-        self.select_src_mesh_btn.setToolTip("Select Source Mesh")
+        self.select_src_mesh_btn.setStatusTip("选择源网格")
+        self.select_src_mesh_btn.setToolTip("选择源网格")
         icon_pixmap = pyqt.get_icon("mouse-pointer", 18)
         self.select_src_mesh_btn.setIcon(QtGui.QIcon(icon_pixmap))
         self.select_src_mesh_btn.setIconSize(QtCore.QSize(18, 18))
@@ -372,11 +372,11 @@ class LoadImportWidget(QtWidgets.QWidget):
         self.mainLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.mainLayout)
         if file_contents:
-            button_label = "Import {}".format(file_contents)
-            placeholderText = "Path to {} file...".format(file_contents)
+            button_label = "导入 {}".format(file_contents)
+            placeholderText = "{} 文件路径...".format(file_contents)
         else:
-            button_label = "Import"
-            placeholderText = "Path to file..."
+            button_label = "导入"
+            placeholderText = "文件路径..."
         self.path_widget = PathObjectExistsEdit(
             placeholderText=placeholderText)
         self.load_button = QtWidgets.QPushButton("...")
@@ -411,7 +411,7 @@ class LoadImportWidget(QtWidgets.QWidget):
         # multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma)
         if self.ext:
             tmp = " ".join(["*.{}".format(x) for x in self.ext])
-            all_exts = ["AFG Files ({})".format(tmp), "All Files (*.*)"]
+            all_exts = ["AFG 文件 ({})".format(tmp), "所有文件 (*.*)"]
             all_exts = ";;".join(all_exts)
         file_path = fileDialog("/", ext=all_exts, mode=self.mode)
         if file_path:
@@ -439,7 +439,7 @@ class AutoFitBipedWidget(QtWidgets.QWidget):
         self.cb_manager = callbackManager.CallbackManager()
         self.stored_embed_info = {}
         self.window().afg_callback_managers.append(self.cb_manager)
-        self.setWindowTitle("Auto Fit Biped")
+        self.setWindowTitle("自动适配双足")
         self.model_path = None
         self.guide_path = None
         self.__isInteractiveEnabled = False
@@ -651,14 +651,14 @@ class AutoFitBipedWidget(QtWidgets.QWidget):
         all_exts = ";;".join(all_exts)
         filePath = fileDialog("/", ext=all_exts, mode=0)
         if not filePath:
-            msg = "No file path selected."
+            msg = "未选择文件路径。"
             self.window().statusBar().showMessage(msg)
             cmds.warning(msg)
             return
         afg_tools._exportData(afg_tools.INTERACTIVE_ASSOCIATION_INFO, filePath)
-        self.window().statusBar().showMessage("Exported! {}".format(filePath),
+        self.window().statusBar().showMessage("导出成功！{}".format(filePath),
                                               3000)
-        print("Exported! {}".format(filePath))
+        print("导出成功！{}".format(filePath))
 
     def importAssociation(self):
         """filedialog for importing associations stored in jsons
@@ -668,19 +668,19 @@ class AutoFitBipedWidget(QtWidgets.QWidget):
         all_exts = ";;".join(all_exts)
         filePath = fileDialog("/", ext=all_exts, mode=1)
         if not filePath:
-            msg = "No file path selected."
+            msg = "未选择文件路径。"
             self.window().statusBar().showMessage(msg)
             cmds.warning(msg)
             return
         self.applyAssociation(afg_tools._importData(filePath))
-        self.window().statusBar().showMessage("Imported! {}".format(filePath),
+        self.window().statusBar().showMessage("导入成功！{}".format(filePath),
                                               3000)
-        print("Exported! {}".format(filePath))
+        print("导出成功！{}".format(filePath))
 
     def _printUserAssociation(self):
         """Convenience function for the user to see association information
         """
-        print("----- Guide and Embed node association -----")
+        print("----- 指南和嵌入节点关联 -----")
         pprint.pprint(afg_tools.INTERACTIVE_ASSOCIATION_INFO)
 
     def applyDefaultAssociation(self):
@@ -1225,7 +1225,7 @@ class RelativeGuidePlacementWidget(QtWidgets.QWidget):
         # Refresh skip lists from module-level vars updated by import
         self.refreshSkipList()
         self.refreshSkipOrientList()
-        print("Relative Guide Placement Imported: {}".format(file_path))
+        print("相对指南位置已导入：{}".format(file_path))
 
     def _exportGuidePlacement(self):
         """FileDialogue for exporting initial guide placements
@@ -1399,7 +1399,7 @@ class RelativeGuidePlacementWidget(QtWidgets.QWidget):
         return items
 
     def ui(self):
-        widget = QtWidgets.QGroupBox("Relative Guide Placement Settings")
+        widget = QtWidgets.QGroupBox("相对指南位置设置")
         layout = QtWidgets.QVBoxLayout()
         layout.setAlignment(QtCore.Qt.AlignTop)
         widget.setLayout(layout)
@@ -1474,7 +1474,7 @@ class RelativeGuidePlacementWidget(QtWidgets.QWidget):
         self.default_skip_nodes_btn = QtWidgets.QPushButton("Reset Defaults")
 
         # --- Action buttons ---
-        msg = "Record\nRelative Guide Placement"
+        msg = "记录\n相对指南位置"
         self.record_placement_btn = QtWidgets.QPushButton(msg)
         self.rgp_scale_cb = QtWidgets.QCheckBox("Reset Default Scale")
         msg = "Apply Default scale of 1, 1, 1"

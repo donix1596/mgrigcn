@@ -83,7 +83,7 @@ def get_keyed_frames(controls):
             frame_sets.append(set(times))
         else:
             cmds.warning(
-                "SDK Creator: No keyframes found on '{}'".format(ctl)
+                "SDK Creator: 在 '{}' 上未找到关键帧".format(ctl)
             )
             frame_sets.append(set())
 
@@ -101,9 +101,9 @@ def get_keyed_frames(controls):
     missing = all_frames - common
     if missing:
         cmds.warning(
-            "SDK Creator: Some controls have keys on "
-            "different frames. Using common frames only. "
-            "Missing frames: {}".format(sorted(missing))
+            "SDK Creator: 部分控制器在"
+            "不同帧上有关键帧。仅使用共同帧。"
+            "缺少帧: {}".format(sorted(missing))
         )
 
     return sorted(common)
@@ -376,8 +376,11 @@ def connect_curves_to_channel(curves, sdk_node, channel):
         if is_scale:
             # Add rest offset: bw.output + 1.0 → sdk_node.channel
             adl_name = "{}_{}_adl".format(short_sdk, channel)
+            # Maya 2026+ renamed addDoubleLinear to addDL
+            version = int(cmds.about(version=True))
+            node_type = "addDL" if version >= 2026 else "addDoubleLinear"
             adl_node = cmds.createNode(
-                "addDoubleLinear", name=adl_name, skipSelect=True
+                node_type, name=adl_name, skipSelect=True
             )
             cmds.connectAttr(bw_node + ".output", adl_node + ".input1")
             cmds.setAttr(adl_node + ".input2", 1.0)
