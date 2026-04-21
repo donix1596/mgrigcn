@@ -1,4 +1,4 @@
-"""string management methods"""
+"""字符串管理方法"""
 
 ##########################################################
 # GLOBAL
@@ -12,10 +12,10 @@ import os
 
 
 def normalize(string):
-    """Replace all invalid characters with "_"
+    """将所有无效字符替换为"_"
 
-    :param string string: A string to normalize.
-    :return string: Normalized string
+    :param string string: 要规范化的字符串。
+    :return string: 规范化后的字符串
 
     """
     string = str(string)

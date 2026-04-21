@@ -8,14 +8,14 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(SpaceRecorderUI, self).__init__(parent)
 
-        # init 3 different buffers
+        # 初始化3个不同的缓冲区
         SpaceRecorderUI.world_spaces = [[], [], []]
 
-        self.setWindowTitle("World Space Recorder")
+        self.setWindowTitle("世界空间录制器")
         self.setMinimumWidth(275)
         self.setWindowFlags(QtCore.Qt.Tool)
 
-        # Delete UI on close to avoid winEvent error
+        # 关闭时删除UI以避免winEvent错误
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         self.create_widgets()
@@ -23,17 +23,17 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.create_connections()
 
     def create_widgets(self):
-        self.record_A_btn = QtWidgets.QPushButton("Record Buffer A")
-        self.apply_A_btn = QtWidgets.QPushButton("Apply Buffer A")
-        self.apply_A_selected_btn = QtWidgets.QPushButton("Apply Sel Buffer A")
+        self.record_A_btn = QtWidgets.QPushButton("录制缓冲区 A")
+        self.apply_A_btn = QtWidgets.QPushButton("应用缓冲区 A")
+        self.apply_A_selected_btn = QtWidgets.QPushButton("应用选中缓冲区 A")
 
-        self.record_B_btn = QtWidgets.QPushButton("Record Buffer B")
-        self.apply_B_btn = QtWidgets.QPushButton("Apply Buffer B")
-        self.apply_B_selected_btn = QtWidgets.QPushButton("Apply Sel Buffer B")
+        self.record_B_btn = QtWidgets.QPushButton("录制缓冲区 B")
+        self.apply_B_btn = QtWidgets.QPushButton("应用缓冲区 B")
+        self.apply_B_selected_btn = QtWidgets.QPushButton("应用选中缓冲区 B")
 
-        self.record_C_btn = QtWidgets.QPushButton("Record Buffer C")
-        self.apply_C_btn = QtWidgets.QPushButton("Apply Buffer C")
-        self.apply_C_selected_btn = QtWidgets.QPushButton("Apply Sel Buffer C")
+        self.record_C_btn = QtWidgets.QPushButton("录制缓冲区 C")
+        self.apply_C_btn = QtWidgets.QPushButton("应用缓冲区 C")
+        self.apply_C_selected_btn = QtWidgets.QPushButton("应用选中缓冲区 C")
 
     def create_layout(self):
         main_layout = QtWidgets.QVBoxLayout()
@@ -41,7 +41,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         main_layout.setSpacing(2)
 
         groupBox = QtWidgets.QGroupBox()
-        groupBox.setTitle("Record World Spaces")
+        groupBox.setTitle("录制世界空间")
         record_layout = QtWidgets.QHBoxLayout(groupBox)
         record_layout.addWidget(self.record_A_btn)
         record_layout.addWidget(self.record_B_btn)
@@ -49,7 +49,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         main_layout.addWidget(groupBox)
 
         groupBox = QtWidgets.QGroupBox()
-        groupBox.setTitle("Apply World Spaces")
+        groupBox.setTitle("应用世界空间")
         apply_layout = QtWidgets.QHBoxLayout(groupBox)
         apply_layout.addWidget(self.apply_A_btn)
         apply_layout.addWidget(self.apply_B_btn)
@@ -57,7 +57,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         main_layout.addWidget(groupBox)
 
         groupBox = QtWidgets.QGroupBox()
-        groupBox.setTitle("Apply to Selection")
+        groupBox.setTitle("应用到选择")
         apply_sel_layout = QtWidgets.QHBoxLayout(groupBox)
         apply_sel_layout.addWidget(self.apply_A_selected_btn)
         apply_sel_layout.addWidget(self.apply_B_selected_btn)
@@ -89,10 +89,10 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     @classmethod
     def record_spaces(cls, buffer=0):
-        """Record the world spaces of the selected object using the timeline range
+        """录制选定对象的世界空间（使用时间轴范围）
 
         Args:
-            buffer (int, optional): the buffer index to archive the spaces
+            buffer (int, optional): 用于存储空间的缓冲区索引
         """
         cls.world_spaces[buffer] = []
         start = pm.playbackOptions(q=True, min=True)
@@ -104,14 +104,14 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         p_amount = 0
         increment = 100 / frame_range
         pm.progressWindow(
-            title="Recording World Spaces", progress=p_amount, max=100
+            title="正在录制世界空间", progress=p_amount, max=100
         )
         for i in range(frame_range):
             frame_spaces = []
             pm.progressWindow(
                 e=True,
                 progress=p_amount,
-                status="Recording Frame:{} ".format(str(i)),
+                status="录制帧:{} ".format(str(i)),
             )
             for x in oSel:
                 pm.currentTime(int(ct))
@@ -126,13 +126,13 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     @classmethod
     def apply_spaces(cls, buffer=0):
-        """Apply the archived world spaces  using the timeline range
+        """应用已归档的世界空间（使用时间轴范围）
 
         Args:
-            buffer (int, optional): the buffer index to retrieve the spaces
+            buffer (int, optional): 用于检索空间的缓冲区索引
         """
         if not cls.world_spaces[buffer]:
-            pm.displayWarning("Space buffer is empty. Please record before")
+            pm.displayWarning("空间缓冲区为空。请先录制")
             return
         start = pm.playbackOptions(q=True, min=True)
         end = pm.playbackOptions(q=True, max=True)
@@ -141,7 +141,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         p_amount = 0
         increment = 100 / frame_range
         pm.progressWindow(
-            title="Apply World Spaces", progress=p_amount, max=100
+            title="正在应用世界空间", progress=p_amount, max=100
         )
         for i in range(frame_range):
             pm.currentTime(int(ct))
@@ -149,7 +149,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             pm.progressWindow(
                 e=True,
                 progress=p_amount,
-                status="Apply Frame:{} ".format(str(i)),
+                status="应用帧:{} ".format(str(i)),
             )
             for space in frame_spaces:
                 space[0].setMatrix(space[1], worldSpace=True)
@@ -160,19 +160,18 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     @classmethod
     def apply_to_selection(cls, buffer=0):
-        """Apply the world spaces to the selected object using the timeline range
-        The order of selection will determine the space used relative to the order
-        of selection at the store time
+        """将世界空间应用到选定对象（使用时间轴范围）
+        选择的顺序将决定空间的使用方式，对应于存储时的选择顺序
 
         Args:
-            buffer (int, optional): the buffer index to retrieve the spaces
+            buffer (int, optional): 用于检索空间的缓冲区索引
         """
         if not cls.world_spaces[buffer]:
-            pm.displayWarning("Space buffer is empty. Please record before")
+            pm.displayWarning("空间缓冲区为空。请先录制")
             return
         oSel = pm.selected()
         if not oSel:
-            pm.displayWarning("Please select object to apply spaces")
+            pm.displayWarning("请选择对象以应用空间")
             return
         start = pm.playbackOptions(q=True, min=True)
         end = pm.playbackOptions(q=True, max=True)
@@ -181,7 +180,7 @@ class SpaceRecorderUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         p_amount = 0
         increment = 100 / frame_range
         pm.progressWindow(
-            title="Apply To Selection World Spaces", progress=p_amount, max=100
+            title="正在应用选择世界空间", progress=p_amount, max=100
         )
         for i in range(frame_range):
             pm.currentTime(int(ct))
