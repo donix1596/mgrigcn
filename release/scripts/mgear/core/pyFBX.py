@@ -22,7 +22,7 @@ if not pm.pluginInfo("fbxmaya", q=True, loaded=True):
     try:
         pm.loadPlugin("fbxmaya")
     except RuntimeError:
-        pm.displayError("You need the fbxmaya.mll plugin!")
+        pm.displayError("需要加载 fbxmaya.mll 插件！")
 
 
 def _py_fbx(mel_cmd, *args, **kwargs):
@@ -457,7 +457,7 @@ def FBXProperties(*args, **kwargs):
 
 
 def FBXProperty(*args, **kwargs):
-    pm.displayWarning("This command is not yet supported in the wrapper")
+    pm.displayWarning("此命令在封装器中尚不支持")
     return
 
 

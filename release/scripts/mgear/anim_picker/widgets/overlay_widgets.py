@@ -75,7 +75,7 @@ class SaveOverlayWidget(OverlayWidget):
 
         # Add options group box
         group_box = QtWidgets.QGroupBox()
-        group_box.setTitle("Save options")
+        group_box.setTitle("保存选项")
         self.option_layout = QtWidgets.QVBoxLayout(group_box)
         self.layout.addWidget(group_box)
 
@@ -100,14 +100,14 @@ class SaveOverlayWidget(OverlayWidget):
     def add_node_save_options(self):
         """Save data to node option"""
         self.node_option_cb = QtWidgets.QCheckBox()
-        self.node_option_cb.setText("Save data to node")
+        self.node_option_cb.setText("保存数据到节点")
 
         self.option_layout.addWidget(self.node_option_cb)
 
     def add_file_save_options(self):
         """Add save to file options"""
         self.file_option_cb = QtWidgets.QCheckBox()
-        self.file_option_cb.setText("Save data to file")
+        self.file_option_cb.setText("保存数据到文件")
 
         self.option_layout.addWidget(self.file_option_cb)
 
@@ -117,7 +117,7 @@ class SaveOverlayWidget(OverlayWidget):
         file_layout.addWidget(self.file_path_le)
 
         file_btn = basic.CallbackButton(callback=self.select_file_event)
-        file_btn.setText("Select File")
+        file_btn.setText("选择文件")
         file_layout.addWidget(file_btn)
 
         self.option_layout.addLayout(file_layout)
@@ -135,11 +135,11 @@ class SaveOverlayWidget(OverlayWidget):
         btn_layout.addItem(spacer)
 
         close_btn = basic.CallbackButton(callback=self.cancel_event)
-        close_btn.setText("Cancel")
+        close_btn.setText("取消")
         btn_layout.addWidget(close_btn)
 
         save_btn = basic.CallbackButton(callback=self.save_event)
-        save_btn.setText("Save")
+        save_btn.setText("保存")
         btn_layout.addWidget(save_btn)
 
         spacer = QtWidgets.QSpacerItem(
@@ -191,7 +191,7 @@ class SaveOverlayWidget(OverlayWidget):
         else:
             path_module = _LAST_USED_DIRECTORY or basic.get_module_path()
         file_path = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Choose file", path_module, picker_msg
+            self, "选择文件", path_module, picker_msg
         )
 
         # Filter return result (based on qt version)
@@ -241,7 +241,7 @@ class SaveOverlayWidget(OverlayWidget):
         self.hide()
 
     def cancel_event(self):
-        """Cancel save"""
+        """取消保存"""
         self.hide()
 
 
@@ -268,7 +268,7 @@ class AboutOverlayWidget(OverlayWidget):
         btn_layout.addItem(spacer)
 
         close_btn = basic.CallbackButton(callback=self.hide)
-        close_btn.setText("Close")
+        close_btn.setText("关闭")
         close_btn.setToolTip("Hide about informations")
         btn_layout.addWidget(close_btn)
 
@@ -319,7 +319,7 @@ class LoadOverlayWidget(OverlayWidget):
         # Add options group box
         group_box = QtWidgets.QGroupBox()
         group_box.setMaximumHeight(150)
-        group_box.setTitle("Load options")
+        group_box.setTitle("加载选项")
         self.option_layout = QtWidgets.QVBoxLayout(group_box)
         self.add_load_options()
         self.layout.addWidget(group_box)
@@ -329,7 +329,7 @@ class LoadOverlayWidget(OverlayWidget):
 
         #  --------------------------------------------------------------------
         close_btn = basic.CallbackButton(callback=self.hide)
-        close_btn.setText("Cancel")
+        close_btn.setText("取消")
         self.layout.addWidget(close_btn)
         #  --------------------------------------------------------------------
         self.update_namespaces()
@@ -349,7 +349,7 @@ class LoadOverlayWidget(OverlayWidget):
         self.file_path_le = QtWidgets.QLineEdit()
         file_layout.addWidget(self.file_path_le)
         file_btn = basic.CallbackButton(callback=self.select_file_event)
-        file_btn.setText("Select File")
+        file_btn.setText("选择文件")
         file_layout.addWidget(file_btn)
 
         self.option_layout.addLayout(file_layout)
@@ -357,7 +357,7 @@ class LoadOverlayWidget(OverlayWidget):
     def load_picker(self):
         file_path = self.file_path_le.text()
         if file_path == "" or not os.path.exists(file_path):
-            msgA = "Path or file does not exist!"
+            msgA = "路径或文件不存在！"
             basic.promptAcceptance(self, msgA, "")
             return
         pkr_data = file_handlers.read_data_file(file_path)
@@ -375,17 +375,17 @@ class LoadOverlayWidget(OverlayWidget):
         remove_defaults = ["UI", "shared"]
         namespaces = cmds.namespaceInfo(listOnlyNamespaces=True, recurse=True)
         [namespaces.remove(x) for x in remove_defaults]
-        namespaces.extend(["Root", "-Refresh-"])
+        namespaces.extend(["根", "-Refresh-"])
         return namespaces
 
     def check_selection(self, index):
         if self.namespace_cbox.currentText() == "-Refresh-":
             self.update_namespaces()
-            print("Namespaces refreshed...")
+            print("命名空间已刷新...")
 
     def load_namespace_options(self):
         layout = QtWidgets.QHBoxLayout()
-        label = QtWidgets.QLabel("Choose Namespace")
+        label = QtWidgets.QLabel("选择命名空间")
         func = self.check_selection
         self.namespace_cbox = basic.CallbackComboBox(
             callback=func, status_tip=None
@@ -393,7 +393,7 @@ class LoadOverlayWidget(OverlayWidget):
         layout.addWidget(label)
         layout.addWidget(self.namespace_cbox)
         btn = basic.CallbackButton(callback=self.load_picker)
-        btn.setText("Load Picker")
+        btn.setText("加载拾取器")
         self.option_layout.addLayout(layout)
         self.option_layout.addWidget(btn)
 
@@ -402,7 +402,7 @@ class LoadOverlayWidget(OverlayWidget):
         picker_msg = "Picker Datas (*.pkr)"
         path_module = _LAST_USED_DIRECTORY or basic.get_module_path()
         file_path = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Choose file", path_module, picker_msg
+            self, "选择文件", path_module, picker_msg
         )
 
         # Filter return result (based on qt version)
@@ -417,8 +417,8 @@ class LoadOverlayWidget(OverlayWidget):
     def new_picker_node(self, data, namespace):
         name, ok = QtWidgets.QInputDialog.getText(
             self,
-            "New character",
-            "Node name",
+            "新建角色",
+            "节点名称",
             QtWidgets.QLineEdit.Normal,
             "PICKER_DATA",
         )
@@ -427,7 +427,7 @@ class LoadOverlayWidget(OverlayWidget):
             return
 
         # Create new data node
-        if namespace != "Root" and cmds.namespace(ex=namespace):
+        if namespace != "根" and cmds.namespace(ex=namespace):
             name = "{}:{}".format(namespace, name)
         data_node = picker_node.DataNode(name=str(name))
         data_node.create()

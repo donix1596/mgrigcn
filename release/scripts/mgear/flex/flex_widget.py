@@ -33,7 +33,7 @@ class FlexDialog(QtWidgets.QDialog):
 
         # sets window rules
         self.setObjectName(FLEX_UI_NAME)
-        self.setWindowTitle("mGear: Flex (rig updater)")
+        self.setWindowTitle("mGear: Flex（绑定更新器）")
         self.setStyleSheet(self.__style_sheet())
         self.setMinimumWidth(350)
         self.setMinimumHeight(100)
@@ -242,12 +242,12 @@ class FlexDialog(QtWidgets.QDialog):
         group_box.setFixedHeight(80)
 
         # analyse widget
-        self.analyse_button = QtWidgets.QPushButton("Analyze")
+        self.analyse_button = QtWidgets.QPushButton("分析")
         self.analyse_button.setPalette(GREEN)
         self.analyse_button.setStatusTip("Hit to analyze the source and target shapes")
 
         # run widget
-        self.run_button = QtWidgets.QPushButton("--> Update shapes <--")
+        self.run_button = QtWidgets.QPushButton("--> 更新形状 <--")
         self.run_button.setPalette(RED)
         self.run_button.setStatusTip("Hit to execute updating your rig shapes")
 

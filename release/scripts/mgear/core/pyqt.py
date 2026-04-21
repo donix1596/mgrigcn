@@ -71,11 +71,11 @@ def _qt_import(binding, shi=False, cui=False):
         from sip import wrapinstance as wrapInstance
         from PyQt4.uic import compileUi
 
-        print("Warning: 'shiboken' is not supported in 'PyQt4' Qt binding")
+        print("警告：'PyQt4' Qt 绑定不支持 'shiboken'")
         shiboken = None
 
     else:
-        raise Exception("Unsupported python Qt binding '%s'" % binding)
+        raise Exception("不支持的 Python Qt 绑定 '%s'" % binding)
 
     rv = [QtGui, QtCore, QtWidgets, wrapInstance]
     if shi:

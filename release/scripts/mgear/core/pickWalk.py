@@ -144,7 +144,7 @@ def controllerWalkUp(node, add=False):
     if oParent:
         pm.select(_getControllerWalkNodes(oParent), add=add)
     else:
-        pm.displayWarning("No parent to walk Up.")
+        pm.displayWarning("没有可向上遍历的父级。")
 
 
 def controllerWalkDown(node, add=False, multi=False):
@@ -173,7 +173,7 @@ def controllerWalkDown(node, add=False, multi=False):
     if oChild:
         pm.select(_getControllerWalkNodes(oChild), add=add)
     else:
-        pm.displayWarning("No child to walk Down.")
+        pm.displayWarning("没有可向下遍历的子级。")
 
 
 def _getControllerWalkSiblings(node, direction="right", multi=False):
@@ -346,7 +346,7 @@ def transformWalkUp(node, add=False):
     if oParent:
         pm.select(oParent, add=add)
     else:
-        pm.displayWarning("No parent to walk Up.")
+        pm.displayWarning("没有可向上遍历的父级。")
 
 
 def transformWalkDown(node, add=False, multi=False):
@@ -394,7 +394,7 @@ def transformWalkDown(node, add=False, multi=False):
     if oChild:
         pm.select(oChild, add=add)
     else:
-        pm.displayWarning("No child to walk Down.")
+        pm.displayWarning("没有可向下遍历的子级。")
 
 
 def _getTransformWalkSiblings(node, direction="right", multi=False):
