@@ -560,15 +560,15 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         menubar = QtWidgets.QMenuBar()
 
         # View menu
-        view_menu = menubar.addMenu("View")
+        view_menu = menubar.addMenu("视图")
 
-        frame_action = view_menu.addAction("Frame Selected (F)")
+        frame_action = view_menu.addAction("框选选中 (F)")
         frame_action.setShortcut("F")
         frame_action.triggered.connect(self.frame_in_hierarchy)
 
         view_menu.addSeparator()
 
-        self.show_shapes_action = view_menu.addAction("Show Shapes")
+        self.show_shapes_action = view_menu.addAction("显示形状")
         self.show_shapes_action.setCheckable(True)
         self.show_shapes_action.setChecked(False)
         self.show_shapes_action.triggered.connect(self.on_show_shapes_changed)
@@ -578,24 +578,24 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
         view_menu.addSeparator()
 
-        refresh_action = view_menu.addAction("Refresh")
+        refresh_action = view_menu.addAction("刷新")
         refresh_action.setShortcut("Ctrl+R")
         refresh_action.triggered.connect(self.refresh)
 
         # Settings menu
-        settings_menu = menubar.addMenu("Settings")
+        settings_menu = menubar.addMenu("设置")
 
-        self.search_listed_only_action = settings_menu.addAction("Search Listed Nodes Only")
+        self.search_listed_only_action = settings_menu.addAction("仅搜索列出的节点")
         self.search_listed_only_action.setCheckable(True)
         self.search_listed_only_action.setChecked(True)
         self.search_listed_only = True
         self.search_listed_only_action.triggered.connect(self.on_search_listed_only_changed)
 
-        self.list_selected_only_action = settings_menu.addAction("List Selected Only")
+        self.list_selected_only_action = settings_menu.addAction("仅列出选中")
         self.list_selected_only_action.setCheckable(True)
         self.list_selected_only_action.triggered.connect(self.on_list_selected_only_changed)
 
-        self.auto_adjust_column_action = settings_menu.addAction("Auto Adjust Node Column")
+        self.auto_adjust_column_action = settings_menu.addAction("自动调整节点列")
         self.auto_adjust_column_action.setCheckable(True)
         self.auto_adjust_column_action.setChecked(True)
         self.auto_adjust_column = True

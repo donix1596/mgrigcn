@@ -115,7 +115,7 @@ class BlenderColorPalette:
 class RandomColorTool(QtWidgets.QWidget):
     """Main UI widget for the Random Color Tool"""
 
-    WINDOW_TITLE = "Random Color Tool"
+    WINDOW_TITLE = "随机颜色工具"
     WINDOW_NAME = "randomColorToolWindow"
 
     def __init__(self, parent=None):
@@ -147,23 +147,23 @@ class RandomColorTool(QtWidgets.QWidget):
         main_layout.setSpacing(8)
 
         # === Color Mode Group ===
-        mode_group = QtWidgets.QGroupBox("Color Mode")
+        mode_group = QtWidgets.QGroupBox("颜色模式")
         mode_layout = QtWidgets.QVBoxLayout(mode_group)
 
         self.mode_combo = QtWidgets.QComboBox()
         self.mode_combo.addItems([
-            "Blender Palette (Recommended)",
-            "Fully Random",
-            "Complementary Harmony",
-            "Triadic Harmony",
-            "Analogous Harmony"
+            "Blender 调色板 (推荐)",
+            "完全随机",
+            "互补色和谐",
+            "三色和谐",
+            "类似色和谐"
         ])
         mode_layout.addWidget(self.mode_combo)
 
         main_layout.addWidget(mode_group)
 
         # === Saturation Controls ===
-        sat_group = QtWidgets.QGroupBox("Saturation Range")
+        sat_group = QtWidgets.QGroupBox("饱和度范围")
         sat_layout = QtWidgets.QVBoxLayout(sat_group)
 
         # Min saturation
@@ -189,7 +189,7 @@ class RandomColorTool(QtWidgets.QWidget):
         main_layout.addWidget(sat_group)
 
         # === Value/Brightness Controls ===
-        val_group = QtWidgets.QGroupBox("Brightness Range")
+        val_group = QtWidgets.QGroupBox("亮度范围")
         val_layout = QtWidgets.QVBoxLayout(val_group)
 
         # Min value
@@ -215,38 +215,38 @@ class RandomColorTool(QtWidgets.QWidget):
         main_layout.addWidget(val_group)
 
         # === Options ===
-        options_group = QtWidgets.QGroupBox("Options")
+        options_group = QtWidgets.QGroupBox("选项")
         options_layout = QtWidgets.QVBoxLayout(options_group)
 
-        self.unique_colors_cb = QtWidgets.QCheckBox("Unique color per object")
+        self.unique_colors_cb = QtWidgets.QCheckBox("每个对象独立颜色")
         self.unique_colors_cb.setChecked(True)
         options_layout.addWidget(self.unique_colors_cb)
 
         self.reuse_materials_cb = QtWidgets.QCheckBox(
-            "Reuse existing RandomColor materials"
+            "复用现有RandomColor材质"
         )
         self.reuse_materials_cb.setChecked(False)
         self.reuse_materials_cb.setToolTip(
-            "If checked, will try to find and reuse existing RandomColor_* materials"
+            "如果勾选，将尝试查找并复用现有的RandomColor_*材质"
         )
         options_layout.addWidget(self.reuse_materials_cb)
 
         main_layout.addWidget(options_group)
 
         # === Preset Buttons ===
-        preset_group = QtWidgets.QGroupBox("Quick Presets")
+        preset_group = QtWidgets.QGroupBox("快速预设")
         preset_layout = QtWidgets.QHBoxLayout(preset_group)
 
-        self.preset_pastel_btn = QtWidgets.QPushButton("Pastel")
-        self.preset_pastel_btn.setToolTip("Soft, light colors")
+        self.preset_pastel_btn = QtWidgets.QPushButton("柔和色")
+        self.preset_pastel_btn.setToolTip("柔和、浅色调")
         preset_layout.addWidget(self.preset_pastel_btn)
 
-        self.preset_muted_btn = QtWidgets.QPushButton("Muted")
-        self.preset_muted_btn.setToolTip("Desaturated, earthy tones")
+        self.preset_muted_btn = QtWidgets.QPushButton("哑光色")
+        self.preset_muted_btn.setToolTip("低饱和度、大地色调")
         preset_layout.addWidget(self.preset_muted_btn)
 
-        self.preset_vibrant_btn = QtWidgets.QPushButton("Vibrant")
-        self.preset_vibrant_btn.setToolTip("More saturated colors")
+        self.preset_vibrant_btn = QtWidgets.QPushButton("鲜艳色")
+        self.preset_vibrant_btn.setToolTip("更高饱和度的颜色")
         preset_layout.addWidget(self.preset_vibrant_btn)
 
         main_layout.addWidget(preset_group)
@@ -254,7 +254,7 @@ class RandomColorTool(QtWidgets.QWidget):
         # === Action Buttons ===
         action_layout = QtWidgets.QHBoxLayout()
 
-        self.apply_btn = QtWidgets.QPushButton("Apply Random Colors")
+        self.apply_btn = QtWidgets.QPushButton("应用随机颜色")
         self.apply_btn.setMinimumHeight(40)
         self.apply_btn.setStyleSheet("""
             QPushButton {
@@ -277,19 +277,19 @@ class RandomColorTool(QtWidgets.QWidget):
         # === Utility Buttons ===
         util_layout = QtWidgets.QHBoxLayout()
 
-        self.remove_btn = QtWidgets.QPushButton("Remove Colors")
-        self.remove_btn.setToolTip("Remove RandomColor materials from selected objects")
+        self.remove_btn = QtWidgets.QPushButton("移除颜色")
+        self.remove_btn.setToolTip("从选定对象移除RandomColor材质")
         util_layout.addWidget(self.remove_btn)
 
-        self.cleanup_btn = QtWidgets.QPushButton("Cleanup Unused")
-        self.cleanup_btn.setToolTip("Delete unused RandomColor materials")
+        self.cleanup_btn = QtWidgets.QPushButton("清理未使用")
+        self.cleanup_btn.setToolTip("删除未使用的RandomColor材质")
         util_layout.addWidget(self.cleanup_btn)
 
         main_layout.addLayout(util_layout)
 
         # === Status Label ===
         self.status_label = QtWidgets.QLabel(
-            "Select objects and click 'Apply Random Colors'"
+            "选择对象并点击'应用随机颜色'"
         )
         self.status_label.setStyleSheet("color: #888; font-style: italic;")
         main_layout.addWidget(self.status_label)
@@ -312,7 +312,7 @@ class RandomColorTool(QtWidgets.QWidget):
         self.sat_max_spin.setValue(0.40)
         self.val_min_spin.setValue(0.75)
         self.val_max_spin.setValue(0.95)
-        self.status_label.setText("Preset: Pastel")
+        self.status_label.setText("预设: 柔和色")
 
     def apply_muted_preset(self):
         """Apply muted/earthy color preset"""
@@ -320,7 +320,7 @@ class RandomColorTool(QtWidgets.QWidget):
         self.sat_max_spin.setValue(0.35)
         self.val_min_spin.setValue(0.45)
         self.val_max_spin.setValue(0.65)
-        self.status_label.setText("Preset: Muted")
+        self.status_label.setText("预设: 哑光色")
 
     def apply_vibrant_preset(self):
         """Apply vibrant color preset"""
@@ -328,7 +328,7 @@ class RandomColorTool(QtWidgets.QWidget):
         self.sat_max_spin.setValue(0.75)
         self.val_min_spin.setValue(0.65)
         self.val_max_spin.setValue(0.85)
-        self.status_label.setText("Preset: Vibrant")
+        self.status_label.setText("预设: 鲜艳色")
 
     def get_selected_meshes(self):
         """Get selected mesh transform nodes"""
@@ -389,8 +389,8 @@ class RandomColorTool(QtWidgets.QWidget):
         meshes = self.get_selected_meshes()
 
         if not meshes:
-            self.status_label.setText("No mesh objects selected!")
-            cmds.warning("No mesh objects selected!")
+            self.status_label.setText("未选择网格对象！")
+            cmds.warning("未选择网格对象！")
             return
 
         # Get settings
@@ -437,11 +437,11 @@ class RandomColorTool(QtWidgets.QWidget):
                 self.assign_material(mesh, sg)
                 created_count += 1
 
-            self.status_label.setText(f"Applied colors to {created_count} object(s)")
+            self.status_label.setText(f"已对 {created_count} 个对象应用颜色")
 
         except Exception as e:
-            cmds.warning(f"Error applying colors: {str(e)}")
-            self.status_label.setText(f"Error: {str(e)}")
+            cmds.warning(f"应用颜色时出错: {str(e)}")
+            self.status_label.setText(f"错误: {str(e)}")
 
         finally:
             cmds.undoInfo(closeChunk=True)
@@ -451,7 +451,7 @@ class RandomColorTool(QtWidgets.QWidget):
         meshes = self.get_selected_meshes()
 
         if not meshes:
-            self.status_label.setText("No mesh objects selected!")
+            self.status_label.setText("未选择网格对象！")
             return
 
         cmds.undoInfo(openChunk=True)
@@ -465,10 +465,10 @@ class RandomColorTool(QtWidgets.QWidget):
                 for shape in shapes:
                     cmds.sets(shape, edit=True, forceElement=default_sg)
 
-            self.status_label.setText(f"Reset {len(meshes)} object(s) to default material")
+            self.status_label.setText(f"已将 {len(meshes)} 个对象重置为默认材质")
 
         except Exception as e:
-            cmds.warning(f"Error removing colors: {str(e)}")
+            cmds.warning(f"移除颜色时出错: {str(e)}")
 
         finally:
             cmds.undoInfo(closeChunk=True)
@@ -504,7 +504,7 @@ class RandomColorTool(QtWidgets.QWidget):
                 except:
                     pass
 
-        self.status_label.setText(f"Cleaned up {deleted_count} unused material(s)")
+        self.status_label.setText(f"已清理 {deleted_count} 个未使用的材质")
 
 
 def show():
