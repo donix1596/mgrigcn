@@ -529,7 +529,7 @@ class ConnectedNodesWidget(QtWidgets.QWidget):
         # Show hint about right-click if truncated
         if self.is_truncated:
             hidden_count = len(self.connected_nodes) - self.visible_count
-            self.setToolTip(f"+{hidden_count} more (right-click to see all)")
+            self.setToolTip(f"+{hidden_count} 更多 (右键查看全部)")
         else:
             self.setToolTip("")
 
@@ -601,7 +601,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         self.auto_adjust_column = True
         self.auto_adjust_column_action.triggered.connect(self.on_auto_adjust_column_changed)
 
-        self.stretch_connected_action = settings_menu.addAction("Stretch Connected Column")
+        self.stretch_connected_action = settings_menu.addAction("拉伸连接节点列")
         self.stretch_connected_action.setCheckable(True)
         self.stretch_connected_action.setChecked(True)
         self.stretch_connected_column = True
@@ -610,11 +610,11 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         settings_menu.addSeparator()
 
         # Search limit submenu
-        search_limit_menu = settings_menu.addMenu("Search All Nodes Limit")
+        search_limit_menu = settings_menu.addMenu("搜索所有节点限制")
         self.search_limit = 50  # Default limit
         self.search_limit_group = QtWidgets.QActionGroup(self)
         for limit in [25, 50, 100, 200, 500, 0]:  # 0 = unlimited
-            label = "Unlimited" if limit == 0 else str(limit)
+            label = "无限制" if limit == 0 else str(limit)
             action = search_limit_menu.addAction(label)
             action.setCheckable(True)
             action.setData(limit)
@@ -645,7 +645,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
         # Search field
         self.search_field = QtWidgets.QLineEdit()
-        self.search_field.setPlaceholderText("Search... (space separates terms)")
+        self.search_field.setPlaceholderText("搜索... (空格分隔多个关键词)")
         self.search_field.setClearButtonEnabled(True)
         self.search_field.textChanged.connect(self.filter_tree)
         search_layout.addWidget(self.search_field)
@@ -665,7 +665,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         # Refresh button
         self.refresh_btn = QtWidgets.QPushButton()
         self.refresh_btn.setFixedSize(25, 25)
-        self.refresh_btn.setToolTip("Refresh")
+        self.refresh_btn.setToolTip("刷新")
         self.refresh_btn.setIcon(QtGui.QIcon(pyqt.get_icon("mgear_refresh-cw", ICON_SIZE)))
         self.refresh_btn.clicked.connect(self.refresh)
         button_layout.addWidget(self.refresh_btn)
@@ -673,7 +673,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         # Add selected button
         self.add_btn = QtWidgets.QPushButton()
         self.add_btn.setFixedSize(25, 25)
-        self.add_btn.setToolTip("Add selected to list")
+        self.add_btn.setToolTip("添加选中到列表")
         self.add_btn.setIcon(QtGui.QIcon(pyqt.get_icon("mgear_plus-square", ICON_SIZE)))
         self.add_btn.clicked.connect(self.add_selected_to_list)
         button_layout.addWidget(self.add_btn)
@@ -681,7 +681,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         # Remove selected button
         self.remove_btn = QtWidgets.QPushButton()
         self.remove_btn.setFixedSize(25, 25)
-        self.remove_btn.setToolTip("Remove selected from list")
+        self.remove_btn.setToolTip("从列表中移除选中")
         self.remove_btn.setIcon(QtGui.QIcon(pyqt.get_icon("mgear_minus-square", ICON_SIZE)))
         self.remove_btn.clicked.connect(self.remove_selected_from_list)
         button_layout.addWidget(self.remove_btn)
@@ -692,7 +692,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
         # Model - 3 columns: Node name, Connected nodes, Visibility
         self.model = QtGui.QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(["Node", "Connected", ""])
+        self.model.setHorizontalHeaderLabels(["节点", "连接", ""])
 
         # Tree
         self.tree = QtWidgets.QTreeView()
@@ -960,11 +960,11 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         menu = QtWidgets.QMenu(self)
 
         # Copy short name
-        copy_name_action = menu.addAction(f"Copy Name")
+        copy_name_action = menu.addAction(f"复制名称")
         copy_name_action.triggered.connect(lambda: self.copy_to_clipboard(short_name))
 
         # Copy full path
-        copy_path_action = menu.addAction(f"Copy Full Path")
+        copy_path_action = menu.addAction(f"复制完整路径")
         copy_path_action.triggered.connect(lambda: self.copy_to_clipboard(full_path))
 
         menu.exec_(self.tree.viewport().mapToGlobal(pos))
@@ -982,11 +982,11 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         menu = QtWidgets.QMenu(self)
 
         # Adjust this column
-        adjust_col_action = menu.addAction(f"Adjust Column to Content")
+        adjust_col_action = menu.addAction(f"调整列以适应内容")
         adjust_col_action.triggered.connect(lambda: self.resize_column_to_contents(column))
 
         # Adjust all columns
-        adjust_all_action = menu.addAction("Adjust All Columns to Content")
+        adjust_all_action = menu.addAction("调整所有列以适应内容")
         adjust_all_action.triggered.connect(self.adjust_all_columns)
 
         menu.exec_(header.mapToGlobal(pos))
@@ -1042,7 +1042,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
         for row in range(item.rowCount()):
             child = item.child(row, 0)
-            if child and child.text() != "Loading...":
+            if child and child.text() != "加载中...":
                 child_index = self.model.indexFromItem(child)
 
                 # Load grandchildren
@@ -1060,7 +1060,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
         for row in range(item.rowCount()):
             child = item.child(row, 0)
-            if child and child.text() != "Loading...":
+            if child and child.text() != "加载中...":
                 child_index = self.model.indexFromItem(child)
                 self.collapse_all_children(child_index)
                 self.tree.collapse(child_index)
@@ -1260,7 +1260,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                 self.load_children(name_item)
             else:
                 # Add placeholder for lazy loading
-                placeholder = QtGui.QStandardItem("Loading...")
+                placeholder = QtGui.QStandardItem("加载中...")
                 placeholder.setEnabled(False)
                 name_item.appendRow([placeholder, QtGui.QStandardItem(), QtGui.QStandardItem()])
         else:
@@ -1947,7 +1947,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         # Update "Load More" button
         if has_more:
             remaining = total_matches - self._current_match_index
-            self.load_more_btn.setText(f"Load More Results... ({remaining} remaining)")
+            self.load_more_btn.setText(f"加载更多结果... (还剩 {remaining} 项)")
             self.load_more_btn.setVisible(True)
         else:
             self.load_more_btn.setVisible(False)
@@ -1978,7 +1978,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             self.load_more_btn.setVisible(False)
         else:
             remaining = total_matches - self._current_match_index
-            self.load_more_btn.setText(f"Load More Results... ({remaining} remaining)")
+            self.load_more_btn.setText(f"加载更多结果... (还剩 {remaining} 项)")
 
     def reveal_node_for_search(self, node_path):
         """Reveal a node in the tree for search results"""
