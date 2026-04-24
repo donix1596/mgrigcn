@@ -83,7 +83,7 @@ class CustomScriptEditDialog(QtWidgets.QDialog):
     action and context menu)
     """
 
-    __TITLE__ = "Custom script"
+    __TITLE__ = "自定义脚本"
 
     def __init__(self, parent=None, cmd=None, item=None):
         QtWidgets.QDialog.__init__(self, parent)
@@ -118,15 +118,15 @@ class CustomScriptEditDialog(QtWidgets.QDialog):
         self.main_layout.addLayout(btn_layout)
 
         ok_btn = basic.CallbackButton(callback=self.accept_event)
-        ok_btn.setText("Ok")
+        ok_btn.setText("确定")
         btn_layout.addWidget(ok_btn)
 
         cancel_btn = basic.CallbackButton(callback=self.cancel_event)
-        cancel_btn.setText("Cancel")
+        cancel_btn.setText("取消")
         btn_layout.addWidget(cancel_btn)
 
         run_btn = basic.CallbackButton(callback=self.run_event)
-        run_btn.setText("Run")
+        run_btn.setText("运行")
         btn_layout.addWidget(run_btn)
 
         self.resize(500, 600)
@@ -175,7 +175,7 @@ class CustomScriptEditDialog(QtWidgets.QDialog):
 class CustomMenuEditDialog(CustomScriptEditDialog):
     """Custom python script window for picker item context menu"""
 
-    __TITLE__ = "Custom Menu"
+    __TITLE__ = "自定义菜单"
 
     def __init__(self, parent=None, name=None, cmd=None, item=None):
 
@@ -193,7 +193,7 @@ class CustomMenuEditDialog(CustomScriptEditDialog):
         name_layout = QtWidgets.QHBoxLayout(self)
 
         label = QtWidgets.QLabel()
-        label.setText("Name")
+        label.setText("名称")
         name_layout.addWidget(label)
 
         self.name_widget = QtWidgets.QLineEdit()
@@ -249,7 +249,7 @@ class SearchAndReplaceDialog(QtWidgets.QDialog):
 
     def setup(self):
         """Build/Setup the dialog window"""
-        self.setWindowTitle("Search And Replace")
+        self.setWindowTitle("搜索并替换")
 
         # Add layout
         self.main_layout = QtWidgets.QVBoxLayout(self)
@@ -268,11 +268,11 @@ class SearchAndReplaceDialog(QtWidgets.QDialog):
         self.main_layout.addLayout(btn_layout)
 
         ok_btn = basic.CallbackButton(callback=self.accept_event)
-        ok_btn.setText("Ok")
+        ok_btn.setText("确定")
         btn_layout.addWidget(ok_btn)
 
         cancel_btn = basic.CallbackButton(callback=self.cancel_event)
-        cancel_btn.setText("Cancel")
+        cancel_btn.setText("取消")
         btn_layout.addWidget(cancel_btn)
 
         ok_btn.setFocus()
@@ -314,7 +314,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
     """Child window to edit shape options"""
 
     __OBJ_NAME__ = "ctrl_picker_edit_window"
-    __TITLE__ = "Picker Item Options"
+    __TITLE__ = "拾取器选项"
 
     #  ----------------------------------------------------------------------
     # constructor
@@ -486,7 +486,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         # Add edit check box
         func = self.handles_cb_event
         self.handles_cb = basic.CallbackCheckBoxWidget(callback=func)
-        self.handles_cb.setText("Show handles")
+        self.handles_cb.setText("显示控制柄")
 
         layout.addWidget(self.handles_cb)
 
@@ -494,7 +494,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         spin_layout = QtWidgets.QHBoxLayout()
 
         spin_label = QtWidgets.QLabel()
-        spin_label.setText("Vtx Count")
+        spin_label.setText("顶点数")
         spin_layout.addWidget(spin_label)
 
         point_count = self.picker_item.edit_point_count
@@ -509,7 +509,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         # Add handles position button
         handle_position = self.edit_handles_position_event
         handles_button = basic.CallbackButton(callback=handle_position)
-        handles_button.setText("Handles Positions")
+        handles_button.setText("控制柄位置")
         layout.addWidget(handles_button)
 
         # Add to main layout
@@ -573,7 +573,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addLayout(spin_layout)
 
         label = QtWidgets.QLabel()
-        label.setText("Angle")
+        label.setText("角度")
         spin_layout.addWidget(label)
 
         self.rotate_sb = QtWidgets.QDoubleSpinBox()
@@ -586,11 +586,11 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addLayout(btn_layout)
 
         btn = basic.CallbackButton(callback=self.rotate_event, rotMinus=True)
-        btn.setText("Rot-")
+        btn.setText("旋转-")
         btn_layout.addWidget(btn)
 
         btn = basic.CallbackButton(callback=self.reset_rotate_event)
-        btn.setText("Reset")
+        btn.setText("重置")
         btn_layout.addWidget(btn)
 
         btn = basic.CallbackButton(callback=self.rotate_event, rotPlus=True)
@@ -632,7 +632,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addStretch()
 
         label = QtWidgets.QLabel()
-        label.setText("Alpha")
+        label.setText("透明度")
         layout.addWidget(label)
 
         alpha_event = self.change_color_alpha_event
@@ -662,7 +662,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         spin_layout = QtWidgets.QHBoxLayout()
 
         spin_label = QtWidgets.QLabel()
-        spin_label.setText("Size factor")
+        spin_label.setText("大小系数")
         spin_layout.addWidget(spin_label)
 
         text_size = self.picker_item.get_text_size()
@@ -686,7 +686,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         color_layout.addStretch()
 
         label = QtWidgets.QLabel()
-        label.setText("Alpha")
+        label.setText("透明度")
         color_layout.addWidget(label)
 
         alpha_event = self.change_text_alpha_event
@@ -713,7 +713,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
 
         # Add edit check box
         self.worldspace_box = QtWidgets.QCheckBox()
-        self.worldspace_box.setText("World space")
+        self.worldspace_box.setText("世界空间")
 
         layout.addWidget(self.worldspace_box)
 
@@ -722,7 +722,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addLayout(spin_layout)
 
         label = QtWidgets.QLabel()
-        label.setText("Factor")
+        label.setText("系数")
         spin_layout.addWidget(label)
 
         self.scale_sb = QtWidgets.QDoubleSpinBox()
@@ -763,7 +763,7 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         default_rad = basic.CallbackRadioButtonWidget(
             "default", self.mode_radio_event, checked=custom_mode
         )
-        default_rad.setText("Default action (select)")
+        default_rad.setText("默认操作（选择）")
         default_rad.setToolTip(
             "Run default selection action on related controls"
         )
@@ -774,15 +774,15 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         custom_rad = basic.CallbackRadioButtonWidget(
             "custom", self.mode_radio_event, checked=action_mode
         )
-        custom_rad.setText("Custom action (script)")
-        custom_rad.setToolTip("Change mode to run a custom action script")
+        custom_rad.setText("自定义操作（脚本）")
+        custom_rad.setToolTip("切换到自定义操作脚本模式")
         layout.addWidget(custom_rad)
 
         # Add edit custom script button
         custom_script = self.edit_custom_action_script
         custom_script_btn = basic.CallbackButton(callback=custom_script)
-        custom_script_btn.setText("Edit Action script")
-        custom_script_btn.setToolTip("Open custom action script edit window")
+        custom_script_btn.setText("编辑操作脚本")
+        custom_script_btn.setToolTip("打开自定义操作脚本编辑窗口")
         layout.addWidget(custom_script_btn)
 
         self.control_layout.addWidget(group_box)
@@ -810,20 +810,20 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addLayout(btn_layout1)
 
         btn = basic.CallbackButton(callback=self.add_selected_controls_event)
-        btn.setText("Add Selection")
-        btn.setToolTip("Add selected controls to list")
+        btn.setText("添加选择")
+        btn.setToolTip("将选中的控制器添加到列表")
         btn.setMinimumWidth(75)
         btn_layout1.addWidget(btn)
 
         btn = basic.CallbackButton(callback=self.remove_controls_event)
-        btn.setText("Remove")
-        btn.setToolTip("Remove selected controls")
+        btn.setText("移除")
+        btn.setToolTip("移除选中的控制器")
         btn.setMinimumWidth(75)
         btn_layout1.addWidget(btn)
 
         btn = basic.CallbackButton(callback=self.search_replace_controls_event)
         btn.setText("Search & Replace")
-        btn.setToolTip("Will search and replace all controls names")
+        btn.setToolTip("搜索并替换所有控制器名称")
         layout.addWidget(btn)
 
         self.control_layout.addWidget(group_box)
@@ -851,12 +851,12 @@ class ItemOptionsWindow(QtWidgets.QMainWindow):
         layout.addLayout(btn_layout1)
 
         btn = basic.CallbackButton(callback=self.new_menu_event)
-        btn.setText("New")
+        btn.setText("新建")
         btn.setMinimumWidth(60)
         btn_layout1.addWidget(btn)
 
         btn = basic.CallbackButton(callback=self.remove_menus_event)
-        btn.setText("Remove")
+        btn.setText("移除")
         btn.setMinimumWidth(60)
         btn_layout1.addWidget(btn)
 
@@ -1270,7 +1270,7 @@ class HandlesPositionWindow(QtWidgets.QMainWindow):
         """Add window option buttons"""
         # Refresh button
         self.refresh_button = basic.CallbackButton(callback=self.refresh_event)
-        self.refresh_button.setText("Refresh")
+        self.refresh_button.setText("刷新")
         self.main_layout.addWidget(self.refresh_button)
 
     def refresh_event(self):
@@ -2827,11 +2827,11 @@ class DataCopyDialog(QtWidgets.QDialog):
         self.main_layout.addLayout(btn_layout)
 
         ok_btn = basic.CallbackButton(callback=self.accept_event)
-        ok_btn.setText("Ok")
+        ok_btn.setText("确定")
         btn_layout.addWidget(ok_btn)
 
         cancel_btn = basic.CallbackButton(callback=self.cancel_event)
-        cancel_btn.setText("Cancel")
+        cancel_btn.setText("取消")
         btn_layout.addWidget(cancel_btn)
 
     def check_box_event(self, value=False, state_obj=None):
@@ -2874,7 +2874,7 @@ class DataCopyDialog(QtWidgets.QDialog):
             y (bool, optional): if true will set Y position
         """
         # Sanity check
-        msg = "Item is not an PickerItem instance"
+        msg = "项目不是PickerItem实例"
         assert isinstance(item, PickerItem), msg
         assert DataCopyDialog.__DATA__, "No stored data to paste"
 
@@ -2905,7 +2905,7 @@ class DataCopyDialog(QtWidgets.QDialog):
             item (object, optional): Picker object
         """
         # Sanity check
-        msg = "Item is not an PickerItem instance"
+        msg = "项目不是PickerItem实例"
         assert isinstance(item, PickerItem), msg
         assert DataCopyDialog.__DATA__, "No stored data to paste"
 
@@ -2930,7 +2930,7 @@ class DataCopyDialog(QtWidgets.QDialog):
     def get(item=None):
         """Will get and store data for specified item"""
         # Sanity check
-        msg = "Item is not an PickerItem instance"
+        msg = "项目不是PickerItem实例"
         assert isinstance(item, PickerItem), msg
 
         # Get picker item data

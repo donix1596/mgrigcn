@@ -93,7 +93,7 @@ def getSkinCluster(obj, first_SC=False):
                 except Exception:
                     pass
     except Exception:
-        pm.displayWarning("%s: is not supported." % obj.name())
+        pm.displayWarning("%s: 不支持的类型。" % obj.name())
 
     return skinCluster
 
@@ -432,14 +432,14 @@ def exportSkin(filePath=None, objs=None, storePositions=False, *args):
         if pm.selected():
             objs = pm.selected()
         else:
-            pm.displayWarning("Please Select One or more objects")
+            pm.displayWarning("请选择一个或多个对象")
             return False
 
     packDic = {"objs": [], "objDDic": [], "bypassObj": []}
 
     if not filePath:
 
-        f2 = "jSkin ASCII  (*{});;gSkin Binary (*{})".format(
+        f2 = "jSkin ASCII  (*{});;gSkin 二进制 (*{})".format(
             FILE_JSON_EXT, FILE_EXT
         )
         f3 = ";;All Files (*.*)"
@@ -455,7 +455,7 @@ def exportSkin(filePath=None, objs=None, storePositions=False, *args):
         FILE_JSON_EXT
     ):
         # filePath += file_ext
-        pm.displayWarning("Not valid file extension for: {}".format(filePath))
+        pm.displayWarning("文件扩展名无效: {}".format(filePath))
         return
 
     _, file_ext = os.path.splitext(filePath)
@@ -464,7 +464,7 @@ def exportSkin(filePath=None, objs=None, storePositions=False, *args):
         skinCls = getSkinCluster(obj)
         if not skinCls:
             pm.displayWarning(
-                obj.name() + ": Skipped because don't have Skin Cluster"
+                obj.name() + ": 已跳过，因为没有蒙皮节点"
             )
             pass
         else:
@@ -496,7 +496,7 @@ def exportSkin(filePath=None, objs=None, storePositions=False, *args):
 
             packDic["objs"].append(obj.name())
             packDic["objDDic"].append(dataDic)
-            exportMsg = "Exported skinCluster {} ({} influences, {} points) {}"
+            exportMsg = "已导出蒙皮节点 {} ({} 个影响体, {} 个点) {}"
             pm.displayInfo(
                 exportMsg.format(
                     skinCls.name(),
@@ -537,14 +537,14 @@ def exportSkinPack(packPath=None, objs=None, use_json=False, storePositions=Fals
         if pm.selected():
             objs = pm.selected()
         else:
-            pm.displayWarning("Please Select Some Objects")
+            pm.displayWarning("请选择一些对象")
             return
 
     packDic = {"packFiles": [], "rootPath": []}
 
     if packPath is None:
         packPath = pm.fileDialog2(
-            fileMode=0, fileFilter="mGear skinPack (*%s)" % PACK_EXT
+            fileMode=0, fileFilter="mGear 蒙皮包 (*%s)" % PACK_EXT
         )
         if not packPath:
             return
@@ -553,7 +553,7 @@ def exportSkinPack(packPath=None, objs=None, use_json=False, storePositions=Fals
             packPath += PACK_EXT
 
     if not packPath.endswith(PACK_EXT):
-        pm.displayWarning("Not valid file extension for: {}".format(packPath))
+        pm.displayWarning("文件扩展名无效: {}".format(packPath))
         return
 
     packDic["rootPath"], packName = os.path.split(packPath)
@@ -566,18 +566,18 @@ def exportSkinPack(packPath=None, objs=None, use_json=False, storePositions=Fals
             pm.displayInfo(filePath)
         else:
             pm.displayWarning(
-                obj.name() + ": Skipped because don't have Skin Cluster"
+                obj.name() + ": 已跳过，因为没有蒙皮节点"
             )
 
     if packDic["packFiles"]:
         data_string = json.dumps(packDic, indent=4, sort_keys=True)
         with open(packPath, "w") as f:
             f.write(data_string + "\n")
-        pm.displayInfo("Skin Pack exported: " + packPath)
+        pm.displayInfo("蒙皮包已导出: " + packPath)
     else:
         pm.displayWarning(
-            "Any of the selected objects have Skin Cluster. "
-            "Skin Pack export aborted."
+            "所选对象均无蒙皮节点。"
+            "蒙皮包导出已中止。"
         )
 
 
@@ -929,7 +929,7 @@ def _findClosestSourceVertices(targetPositions, sourcePositions, positionLookup)
         edit=True,
         beginProgress=True,
         isInterruptable=True,
-        status="Mapping skin weights by position...",
+        status="正在按位置映射蒙皮权重...",
         maxValue=numTargets,
     )
 
@@ -940,7 +940,7 @@ def _findClosestSourceVertices(targetPositions, sourcePositions, positionLookup)
             # Check for cancel
             if i % updateInterval == 0:
                 if cmds.progressBar(gMainProgressBar, query=True, isCancelled=True):
-                    pm.displayWarning("Skin import cancelled by user")
+                    pm.displayWarning("蒙皮导入已被用户取消")
                     return mapping, exactMatches, closestMatches, True
                 cmds.progressBar(gMainProgressBar, edit=True, step=updateInterval)
 
@@ -1040,25 +1040,24 @@ def _importSkinVolumeMethod(objNode, targetSkinCluster, dataDic, compressed):
             # No stored positions - skip import
             objName = objNode.name() if hasattr(objNode, "name") else str(objNode)
             pm.displayWarning(
-                "Skipping import for '{}': No vertex positions stored in skin "
-                "file. To use volume-based import, re-export with 'Export Skin "
-                "Pack ASCII with Position Data'.".format(objName)
+                "跳过 '{}' 的导入: 蒙皮文件中未存储顶点位置。"
+                "要使用体积导入，请使用'导出带位置数据的蒙皮包'重新导出。".format(objName)
             )
             return False
 
         pm.displayInfo(
-            "Using stored vertex positions ({} points) for "
-            "position-based weight transfer".format(len(storedPositions))
+            "使用存储的顶点位置 ({} 个点) 进行"
+            "基于位置的权重传递".format(len(storedPositions))
         )
 
         # Get target vertex positions
         targetPositions, _ = getVertexPositions(objNode)
         if not targetPositions:
-            pm.displayWarning("Failed to get target vertex positions")
+            pm.displayWarning("获取目标顶点位置失败")
             return False
 
         pm.displayInfo(
-            "Mapping {} target vertices to {} source vertices...".format(
+            "正在将 {} 个目标顶点映射到 {} 个源顶点...".format(
                 len(targetPositions), len(storedPositions)
             )
         )
@@ -1077,7 +1076,7 @@ def _importSkinVolumeMethod(objNode, targetSkinCluster, dataDic, compressed):
             return False
 
         pm.displayInfo(
-            "Position matching: {} exact, {} closest-point".format(
+            "位置匹配: {} 个精确匹配, {} 个最近点匹配".format(
                 exactMatches, closestMatches
             )
         )
@@ -1090,11 +1089,11 @@ def _importSkinVolumeMethod(objNode, targetSkinCluster, dataDic, compressed):
                 targetWeights[targetIdx] = srcWeights
 
         if not targetWeights:
-            pm.displayWarning("No weights could be mapped")
+            pm.displayWarning("无法映射任何权重")
             return False
 
         # Apply weights using setVertexWeights
-        pm.displayInfo("Applying weights to {} vertices...".format(len(targetWeights)))
+        pm.displayInfo("正在将权重应用到 {} 个顶点...".format(len(targetWeights)))
         setVertexWeights(targetSkinCluster.name(), targetWeights, normalize=True)
 
         # Apply skinning method from imported data
@@ -1103,12 +1102,12 @@ def _importSkinVolumeMethod(objNode, targetSkinCluster, dataDic, compressed):
                 targetSkinCluster.attr(attr).set(dataDic[attr])
 
         pm.displayInfo(
-            "Successfully mapped weights for {} vertices".format(len(targetWeights))
+            "成功映射了 {} 个顶点的权重".format(len(targetWeights))
         )
         return True
 
     except Exception as e:
-        pm.displayWarning("Volume-based import failed: {}".format(e))
+        pm.displayWarning("体积导入失败: {}".format(e))
         import traceback
         traceback.print_exc()
         return False
@@ -1117,8 +1116,8 @@ def _importSkinVolumeMethod(objNode, targetSkinCluster, dataDic, compressed):
 def _getObjsFromSkinFile(filePath=None, *args):
     # retrive the object names inside gSkin file
     if not filePath:
-        f1 = "mGear Skin (*{0} *{1})".format(FILE_EXT, FILE_JSON_EXT)
-        f2 = ";;gSkin Binary (*{0});;jSkin ASCII  (*{1})".format(
+        f1 = "mGear 蒙皮 (*{0} *{1})".format(FILE_EXT, FILE_JSON_EXT)
+        f2 = ";;gSkin 二进制 (*{0});;jSkin ASCII  (*{1})".format(
             FILE_EXT, FILE_JSON_EXT
         )
         f3 = ";;All Files (*.*)"
@@ -1162,8 +1161,8 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
             Empty list if all objects used standard index-based import.
     """
     if not filePath:
-        f1 = "mGear Skin (*{0} *{1})".format(FILE_EXT, FILE_JSON_EXT)
-        f2 = ";;gSkin Binary (*{0});;jSkin ASCII  (*{1})".format(
+        f1 = "mGear 蒙皮 (*{0} *{1})".format(FILE_EXT, FILE_JSON_EXT)
+        f2 = ";;gSkin 二进制 (*{0});;jSkin ASCII  (*{1})".format(
             FILE_EXT, FILE_JSON_EXT
         )
         f3 = ";;All Files (*.*)"
@@ -1242,7 +1241,7 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
             # Handle vertex count mismatch based on mode
             if vertexMismatch:
                 if vertexMismatchMode == "skip":
-                    warningMsg = "Vertex counts on {} do not match. {} != {}"
+                    warningMsg = "{} 的顶点数不匹配。{} != {}"
                     pm.displayWarning(
                         warningMsg.format(
                             objName, meshVertices, importedVertices
@@ -1251,8 +1250,8 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
                     continue
                 elif vertexMismatchMode in ("closestPoint", "auto"):
                     pm.displayInfo(
-                        "Vertex count mismatch on {}. Using closest-point "
-                        "matching ({} -> {} vertices)...".format(
+                        "{} 的顶点数不匹配。正在使用最近点"
+                        "匹配 ({} -> {} 个顶点)...".format(
                             objName, importedVertices, meshVertices
                         )
                     )
@@ -1276,8 +1275,8 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
                                 if j not in sceneJoints:
                                     notFound.append(str(j))
                             pm.displayWarning(
-                                "Object: {} Skipped. Can't find corresponding "
-                                "joints: {}".format(objName, notFound)
+                                "对象: {} 已跳过。找不到对应的"
+                                "骨骼: {}".format(objName, notFound)
                             )
                             continue
 
@@ -1288,12 +1287,12 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
                     if success:
                         volumeImported.append(objName)
                         print(
-                            "Imported skin (volume method) for: {}".format(objName)
+                            "已导入蒙皮 (体积方法): {}".format(objName)
                         )
                     else:
                         print(
-                            "Skipped skin import for: {} (volume method failed, "
-                            "see warning above)".format(objName)
+                            "跳过蒙皮导入: {} (体积方法失败，"
+                            "请查看上方警告)".format(objName)
                         )
                     continue
 
@@ -1317,9 +1316,8 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
                         if j not in sceneJoints:
                             notFound.append(str(j))
                     pm.displayWarning(
-                        "Object: " + objName + " Skiped. Can't "
-                        "found corresponding deformer for the "
-                        "following joints: " + str(notFound)
+                        "对象: " + objName + " 已跳过。找不到"
+                        "以下骨骼对应的变形器: " + str(notFound)
                     )
                     continue
 
@@ -1328,10 +1326,10 @@ def importSkin(filePath=None, vertexMismatchMode="auto", *args):
 
             if skinCluster:
                 setData(skinCluster, data, compressed)
-                print("Imported skin for: {}".format(objName))
+                print("已导入蒙皮: {}".format(objName))
 
         except Exception:
-            warningMsg = "Object: {} Skipped. Can NOT be found in the scene"
+            warningMsg = "对象: {} 已跳过。在场景中找不到"
             pm.displayWarning(warningMsg.format(objName))
 
     return volumeImported
@@ -1381,8 +1379,7 @@ def skinCopy(sourceMesh=None, targetMesh=None, *args, **kwargs):
             targetMeshes = pm.selected()[:-1]
         else:
             pm.displayWarning(
-                "Please select target mesh/meshes and source "
-                "mesh with skinCluster."
+                "请选择目标网格和带有蒙皮节点的源网格。"
             )
             return
     else:
@@ -1421,7 +1418,7 @@ def skinCopy(sourceMesh=None, targetMesh=None, *args, **kwargs):
             )
             skinCluster.skinningMethod.set(skinMethod)
         else:
-            errorMsg = "Source Mesh : {} doesn't have a skinCluster."
+            errorMsg = "源网格 : {} 没有蒙皮节点。"
             pm.displayError(errorMsg.format(sourceMesh.name()))
 
 
@@ -1699,7 +1696,7 @@ def _skinCopyPartialExecute(
         totalVertices += len(vtxIndices)
 
     cmds.inViewMessage(
-        amg="Copied skin to <hl>{}</hl> vertices".format(totalVertices),
+        amg="已复制蒙皮到 <hl>{}</hl> 个顶点".format(totalVertices),
         pos="midCenter",
         fade=True,
     )
@@ -1711,7 +1708,7 @@ class SkinCopyPartialUI(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super(SkinCopyPartialUI, self).__init__(parent)
-        self.setWindowTitle("Copy Skin Partial")
+        self.setWindowTitle("部分复制蒙皮")
         self.setMinimumWidth(300)
         self.setWindowFlags(
             QtCore.Qt.Window
@@ -1727,36 +1724,36 @@ class SkinCopyPartialUI(QtWidgets.QDialog):
         layout = QtWidgets.QVBoxLayout(self)
 
         # Source mesh section
-        source_grp = QtWidgets.QGroupBox("Source Mesh")
+        source_grp = QtWidgets.QGroupBox("源网格")
         source_layout = QtWidgets.QHBoxLayout(source_grp)
         self.source_line = QtWidgets.QLineEdit()
-        self.source_line.setPlaceholderText("Select mesh and click <<")
+        self.source_line.setPlaceholderText("选择网格后点击 <<")
         self.source_btn = QtWidgets.QPushButton("<<")
         self.source_btn.setFixedWidth(30)
-        self.source_btn.setToolTip("Load selected mesh")
+        self.source_btn.setToolTip("加载选中的网格")
         source_layout.addWidget(self.source_line)
         source_layout.addWidget(self.source_btn)
         layout.addWidget(source_grp)
 
         # Options
-        self.normalize_chk = QtWidgets.QCheckBox("Normalize weights")
+        self.normalize_chk = QtWidgets.QCheckBox("归一化权重")
         self.normalize_chk.setChecked(True)
         layout.addWidget(self.normalize_chk)
 
         # Copy button
-        self.copy_btn = QtWidgets.QPushButton("Copy to Selected Vertices")
+        self.copy_btn = QtWidgets.QPushButton("复制到选中的顶点")
         self.copy_btn.setMinimumHeight(40)
         layout.addWidget(self.copy_btn)
 
         # Info label
         self.info_label = QtWidgets.QLabel(
-            "Select vertices on target mesh(es), then click Copy."
+            "在目标网格上选择顶点，然后点击复制。"
         )
         self.info_label.setStyleSheet("color: gray;")
         layout.addWidget(self.info_label)
 
         # Close button
-        self.close_btn = QtWidgets.QPushButton("Close")
+        self.close_btn = QtWidgets.QPushButton("关闭")
         layout.addWidget(self.close_btn)
 
     def _connect_signals(self):
@@ -1777,25 +1774,25 @@ class SkinCopyPartialUI(QtWidgets.QDialog):
         if meshes:
             self.source_line.setText(meshes[0].name())
         else:
-            pm.displayWarning("Please select a mesh with skinCluster.")
+            pm.displayWarning("请选择一个带有蒙皮节点的网格。")
 
     def _copy(self):
         """Execute the copy operation."""
         source_name = self.source_line.text().strip()
         if not source_name:
-            pm.displayWarning("Please set a source mesh.")
+            pm.displayWarning("请设置源网格。")
             return
 
         # Validate source mesh
         if not pm.objExists(source_name):
-            pm.displayError("Source mesh '{}' not found.".format(source_name))
+            pm.displayError("源网格 '{}' 未找到。".format(source_name))
             return
 
         sourceMesh = pm.PyNode(source_name)
         sourceSkin = getSkinCluster(sourceMesh)
         if not sourceSkin:
             pm.displayError(
-                "Source mesh '{}' has no skinCluster.".format(source_name)
+                "源网格 '{}' 没有蒙皮节点。".format(source_name)
             )
             return
 
@@ -1804,7 +1801,7 @@ class SkinCopyPartialUI(QtWidgets.QDialog):
         vertices = [v for v in selection if ".vtx[" in str(v)]
 
         if not vertices:
-            pm.displayWarning("Please select vertices on target mesh.")
+            pm.displayWarning("请在目标网格上选择顶点。")
             return
 
         normalize = self.normalize_chk.isChecked()
@@ -1821,7 +1818,7 @@ class SkinCopyPartialUI(QtWidgets.QDialog):
                 sourceMesh, vertices, normalize, soft_weights=soft_weights
             )
         except Exception as e:
-            pm.displayError("Copy failed: {}".format(e))
+            pm.displayError("复制失败: {}".format(e))
             import traceback
             traceback.print_exc()
             return

@@ -15,17 +15,17 @@ from mgear.core.blendshape import bs_target_weight  # noqa: F401
 
 
 def is_deformer(node):
-    """Check if a node is a geometry deformer.
+    """检查节点是否为几何体变形器。
 
-    Uses Maya's API class hierarchy (MFn.kGeometryFilt)
-    to detect all deformer types, including custom and
-    plugin deformers.
+    使用Maya的API类层次结构(MFn.kGeometryFilt)
+    检测所有变形器类型，包括自定义和
+    插件变形器。
 
-    Args:
-        node (str or PyNode): Node name to check.
+    参数:
+        node (str or PyNode): 要检查的节点名称。
 
-    Returns:
-        bool: True if the node is a deformer.
+    返回:
+        bool: 如果节点是变形器则返回True。
     """
     m_sel = om2.MSelectionList()
     try:
@@ -36,27 +36,27 @@ def is_deformer(node):
 
 
 def filter_deformers(node_list):
-    """Filter a list of nodes to only return deformers.
+    """过滤节点列表，仅返回变形器。
 
-    Args:
-        node_list (list): List of node names or PyNodes.
+    参数:
+        node_list (list): 节点名称或PyNode列表。
 
-    Returns:
-        list: Filtered list containing only deformer nodes.
+    返回:
+        list: 仅包含变形器节点的过滤列表。
     """
     return [node for node in node_list if is_deformer(node)]
 
 
 def get_deformers(mesh, deformer_type=None):
-    """Get deformer nodes from a mesh's history.
+    """从网格的历史中获取变形器节点。
 
-    Args:
-        mesh (str): The mesh transform name.
-        deformer_type (str, optional): Filter by a specific Maya
-            deformer type name (e.g. "skinCluster", "blendShape").
+    参数:
+        mesh (str): 网格变换名称。
+        deformer_type (str, optional): 按特定Maya变形器类型名称过滤
+            (例如 "skinCluster", "blendShape")。
 
-    Returns:
-        list: List of deformer node names.
+    返回:
+        list: 变形器节点名称列表。
     """
     history = (
         cmds.listHistory(mesh, pruneDagObjects=True) or []
@@ -76,22 +76,21 @@ def get_deformers(mesh, deformer_type=None):
 
 
 def disable_deformer_envelopes(mesh, exclude_types=None):
-    """Disable all deformer envelopes on a mesh.
+    """禁用网格上的所有变形器封套。
 
-    Stores original envelope values for later restoration
-    via ``restore_deformer_envelopes``. Uses ``cmds.mute``
-    for envelopes that have input connections.
+    存储原始封套值以便稍后通过
+    ``restore_deformer_envelopes``恢复。对于有输入连接的封套
+    使用``cmds.mute``。
 
-    Args:
-        mesh (str): The mesh transform name.
-        exclude_types (set, optional): Deformer type names
-            to skip (e.g. ``{"blendShape"}``).
+    参数:
+        mesh (str): 网格变换名称。
+        exclude_types (set, optional): 要跳过的变形器类型名称
+            (例如 ``{"blendShape"}``)。
 
-    Returns:
-        dict: Mapping of deformer name to original state.
-            Values are either a float (original envelope
-            value) or the string ``"muted"`` if the envelope
-            was muted to disable it.
+    返回:
+        dict: 变形器名称到原始状态的映射。
+            值可以是浮点数(原始封套值)
+            或字符串``"muted"``（如果封套被静音以禁用）。
     """
     exclude_types = exclude_types or set()
     deformers = get_deformers(mesh)
@@ -118,11 +117,10 @@ def disable_deformer_envelopes(mesh, exclude_types=None):
 
 
 def restore_deformer_envelopes(original_envelopes):
-    """Restore deformer envelopes to their original values.
+    """将变形器封套恢复为其原始值。
 
-    Args:
-        original_envelopes (dict): State dict returned by
-            ``disable_deformer_envelopes``.
+    参数:
+        original_envelopes (dict): 由``disable_deformer_envelopes``返回的状态字典。
     """
     for d, val in original_envelopes.items():
         if not cmds.objExists(d):
@@ -147,33 +145,27 @@ def restore_deformer_envelopes(original_envelopes):
 def create_wrap_deformer(
     target, driver, use_base_duplicate=False, name=None
 ):
-    """Create a wrap deformer on target driven by driver.
+    """在目标上创建由驱动器驱动的包裹变形器。
 
-    Supports two base mesh strategies:
+    支持两种基础网格策略：
 
-    - **Intermediate shape** (``use_base_duplicate=False``):
-      Connects to the driver's existing intermediate (orig)
-      shape. Suitable when the driver won't be modified or
-      deleted during the wrap's lifetime.
+    - **中间形状** (``use_base_duplicate=False``):
+      连接到驱动器现有的中间(orig)形状。
+      适用于驱动器在包裹生命周期内不会被修改或删除的情况。
 
-    - **Base duplicate** (``use_base_duplicate=True``):
-      Creates a separate static duplicate as the base mesh.
-      Safer when the wrap will be deleted later, as it
-      avoids corrupting the driver's deformation chain.
+    - **基础复制** (``use_base_duplicate=True``):
+      创建一个单独的静态复制作为基础网格。
+      当包裹稍后将被删除时更安全，因为它避免了损坏驱动器的变形链。
 
-    Args:
-        target (str): Target mesh transform to deform.
-        driver (str): Driver mesh transform.
-        use_base_duplicate (bool): If True, create a
-            separate base mesh duplicate instead of using
-            the driver's intermediate shape.
-        name (str, optional): Name for the wrap deformer.
+    参数:
+        target (str): 要变形的目标网格变换。
+        driver (str): 驱动器网格变换。
+        use_base_duplicate (bool): 如果为True，创建单独的基础网格复制而不是使用驱动器的中间形状。
+        name (str, optional): 包裹变形器的名称。
 
-    Returns:
-        tuple: ``(wrap_node, base_dup)`` where base_dup is
-            the static base mesh to clean up later (only
-            when ``use_base_duplicate=True``), or None.
-            Returns ``(None, None)`` on failure.
+    返回:
+        tuple: ``(wrap_node, base_dup)`` 其中base_dup是需要稍后清理的静态基础网格（仅当``use_base_duplicate=True``时），否则为None。
+            失败时返回``(None, None)``。
     """
     # Get visible shape on driver
     driver_shapes = cmds.listRelatives(
@@ -280,16 +272,15 @@ def create_wrap_deformer(
 
 def create_cluster_on_curve(curve, control_points=None):
     """
-    Create a cluster deformer on a given curve at specified control points.
+    在给定曲线的指定控制点上创建簇变形器。
 
-    Args:
-        curve (str or PyNode): The name or PyNode of the curve to apply
-            the cluster deformer.
-        control_points (list of int, optional): List of control point
-            indices to affect. Applies to all if None. Default is None.
+    参数:
+        curve (str or PyNode): 要应用簇变形器的曲线名称或PyNode。
+        control_points (list of int, optional): 要影响的控制点索引列表。
+            如果为None则应用于所有控制点。默认为None。
 
-    Returns:
-        tuple: The name of the cluster and the name of the cluster handle.
+    返回:
+        tuple: 簇名称和簇手柄名称。
     """
     # Check if curve is a PyNode, if not make it one
     if not isinstance(curve, pm.nt.Transform):
@@ -320,17 +311,17 @@ def create_proximity_wrap(
 
 ):
     """
-    Create a proximity wrap deformer.
+    创建邻近包裹变形器。
 
-    Args:
-        target_geos: Single geometry or list of geometries to be deformed (string or PyNode)
-        driver_geos: Single driver geometry or list of drivers (string or PyNode)
-        deformer_name: Optional name for the deformer. If None, generates from first target geo.
-        weights_path: Optional path to the weights file directory
-        weights_filename: Optional filename for the weights (defaults to deformer_name + ".json")
+    参数:
+        target_geos: 要变形的单个几何体或几何体列表（字符串或PyNode）
+        driver_geos: 单个驱动器几何体或驱动器列表（字符串或PyNode）
+        deformer_name: 变形器的可选名称。如果为None，则从第一个目标几何体生成。
+        weights_path: 权重文件目录的可选路径
+        weights_filename: 权重文件的可选文件名（默认为deformer_name + ".json"）
 
-    Returns:
-        The renamed deformer node name
+    返回:
+        重命名后的变形器节点名称
     """
     # Ensure lists
     if not isinstance(target_geos, (list, tuple)):
@@ -383,19 +374,19 @@ def create_proximity_wrap(
 
 
 def createWireDeformer(mesh, curve, dropoffDistance=1.0, name="wire"):
-    """Create a wire deformer on a mesh using a curve.
+    """使用曲线在网格上创建线变形器。
 
-    Args:
-        mesh (str): Name of the target mesh.
-        curve (str): Name of the driver curve.
-        dropoffDistance (float): Dropoff distance for the wire influence.
-            Defaults to 1.0.
-        name (str): Name for the wire deformer. Defaults to "wire".
+    参数:
+        mesh (str): 目标网格名称。
+        curve (str): 驱动曲线名称。
+        dropoffDistance (float): 线影响的衰减距离。
+            默认为1.0。
+        name (str): 线变形器的名称。默认为"wire"。
 
-    Returns:
-        str: Name of created wire deformer, or None if failed.
+    返回:
+        str: 创建的线变形器名称，失败时返回None。
 
-    Example:
+    示例:
         >>> wire = createWireDeformer("pSphere1", "curve1", dropoffDistance=5.0)
     """
     wire_result = cmds.wire(
@@ -419,30 +410,29 @@ def createWireDeformer(mesh, curve, dropoffDistance=1.0, name="wire"):
 
 
 def getWireDeformerInfo(wireDeformer):
-    """Get wire deformer information.
+    """获取线变形器信息。
 
-    Retrieves the wire curve, base curve, and key attributes from a wire
-    deformer node.
+    从线变形器节点检索线曲线、基础曲线和关键属性。
 
-    Args:
-        wireDeformer (str): Name of the wire deformer node.
+    参数:
+        wireDeformer (str): 线变形器节点名称。
 
-    Returns:
-        dict: Dictionary with wire info, or None if failed.
-            Keys:
-                - wire_curve (str): The deformed/animated curve
-                - base_curve (str): The original undeformed curve
-                - dropoff_distance (float): Wire influence falloff distance
-                - scale (float): Wire scale multiplier
-                - envelope (float): Wire envelope value
+    返回:
+        dict: 包含线信息的字典，失败时返回None。
+            键:
+                - wire_curve (str): 变形/动画曲线
+                - base_curve (str): 原始未变形曲线
+                - dropoff_distance (float): 线影响衰减距离
+                - scale (float): 线缩放乘数
+                - envelope (float): 线封套值
 
-    Example:
+    示例:
         >>> info = getWireDeformerInfo("wire1")
         >>> print(info["dropoff_distance"])
         5.0
     """
     if not wireDeformer or not cmds.objExists(wireDeformer):
-        cmds.warning("Wire deformer does not exist: {}".format(wireDeformer))
+        cmds.warning("线变形器不存在: {}".format(wireDeformer))
         return None
 
     wire_curve = None
@@ -536,21 +526,21 @@ def getWireDeformerInfo(wireDeformer):
 
 
 def getWireWeightMap(mesh, wireDeformer):
-    """Get the wire deformer's per-vertex weight map.
+    """获取线变形器的逐顶点权重映射。
 
-    Retrieves the weight value for each vertex affected by the wire deformer.
-    Weights of 1.0 mean full influence, 0.0 means no influence.
+    检索受线变形器影响的每个顶点的权重值。
+    权重1.0表示完全影响，0.0表示无影响。
 
-    Args:
-        mesh (str): Name of the mesh.
-        wireDeformer (str): Name of the wire deformer.
+    参数:
+        mesh (str): 网格名称。
+        wireDeformer (str): 线变形器名称。
 
-    Returns:
-        dict: Dictionary mapping vertex index to weight value (0.0 to 1.0).
+    返回:
+        dict: 将顶点索引映射到权重值（0.0到1.0）的字典。
 
-    Example:
+    示例:
         >>> weights = getWireWeightMap("pSphere1", "wire1")
-        >>> print(weights[0])  # Weight for vertex 0
+        >>> print(weights[0])  # 顶点0的权重
         1.0
     """
     num_verts = cmds.polyEvaluate(mesh, vertex=True)
@@ -591,17 +581,17 @@ def getWireWeightMap(mesh, wireDeformer):
 
 
 def getMeshWireDeformers(mesh):
-    """Get all wire deformers affecting a mesh.
+    """获取影响网格的所有线变形器。
 
-    Searches the mesh's deformation history for wire deformer nodes.
+    在网格的变形历史中搜索线变形器节点。
 
-    Args:
-        mesh (str): Name of the mesh.
+    参数:
+        mesh (str): 网格名称。
 
-    Returns:
-        list: List of wire deformer names, or empty list if none found.
+    返回:
+        list: 线变形器名称列表，未找到则返回空列表。
 
-    Example:
+    示例:
         >>> wires = getMeshWireDeformers("pSphere1")
         >>> print(wires)
         ['wire1', 'wire2']

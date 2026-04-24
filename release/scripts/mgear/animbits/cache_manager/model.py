@@ -9,11 +9,11 @@ from mgear.animbits.cache_manager.query import is_rig
 class CacheManagerStringListModel(QtCore.QAbstractListModel):
 
     def __init__(self, items=[], parent=None):
-        """ Custom list model for the cache manager
+        """缓存管理器的自定义列表模型
 
         Args:
-            items (list): string list of rigs inside scene
-            parent (QtWidget): Parent widget
+            items (list): 场景内装配体的字符串列表
+            parent (QtWidget): 父级部件
         """
         super(CacheManagerStringListModel, self).__init__(parent=parent)
 
@@ -22,7 +22,7 @@ class CacheManagerStringListModel(QtCore.QAbstractListModel):
 
     @staticmethod
     def __get_resource_path():
-        """ Returns the relative path to the resource folder
+        """返回资源文件夹的相对路径
         """
 
         file_dir = os.path.dirname(__file__)
@@ -33,9 +33,9 @@ class CacheManagerStringListModel(QtCore.QAbstractListModel):
         return "{}/resources".format(file_dir)
 
     def data(self, index, role):
-        """ Override QAbstractListModel method
+        """重写 QAbstractListModel 方法
 
-        **data** returns the item name and icon at the given index
+        **data** 返回给定索引处的项目名称和图标
         """
 
         row = index.row()
@@ -58,9 +58,9 @@ class CacheManagerStringListModel(QtCore.QAbstractListModel):
             return value
 
     def rowCount(self, parent):  # @unusedVariable
-        """ Override QAbstractListModel method
+        """重写 QAbstractListModel 方法
 
-        **rowCount** returns the number of items in the list model
+        **rowCount** 返回列表模型中的项目数量
         """
 
         if self.__items:

@@ -15,7 +15,7 @@ class RelatedComponents(QtWidgets.QDialog, rcUI.Ui_Dialog):
         self.update_flag = False
         self.components_comboBox.addItems(related_components)
         self.create_connections()
-        self.setWindowTitle("Related Components")
+        self.setWindowTitle("相关组件")
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
     def create_connections(self):
@@ -30,7 +30,7 @@ class RelatedComponents(QtWidgets.QDialog, rcUI.Ui_Dialog):
         self.update_flag = self.update_checkBox.isChecked()
 
     def cancel(self):
-        pm.displayWarning("User cancels update.")
+        pm.displayWarning("用户取消了更新。")
 
 
 def exec_window(related_components, *args):

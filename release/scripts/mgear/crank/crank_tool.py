@@ -70,12 +70,12 @@ def create_layer(oSel, foc=False, useExsitingBS=False):
 
     if oSel:
         result = pm.promptDialog(
-            title="Crank Layer Name",
-            message="Enter Name:",
-            button=["OK", "Cancel"],
-            defaultButton="OK",
-            cancelButton="Cancel",
-            dismissString="Cancel",
+            title="Crank层名称",
+            message="输入名称：",
+            button=["确定", "取消"],
+            defaultButton="确定",
+            cancelButton="取消",
+            dismissString="取消",
             text="",
         )
 
@@ -978,7 +978,7 @@ class crankTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 dismissString="No",
             )
 
-            # If user chooses 'Yes', change to DG mode
+            # If user chooses '是', change to DG mode
             if result == "Yes":
                 self.set_eval_to_parallel(False)
                 pm.displayInfo("Evaluation mode changed to DG.")

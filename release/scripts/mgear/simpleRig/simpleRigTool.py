@@ -63,8 +63,7 @@ def _add_to_driven_attr(dagNode, driven):
             )
         else:
             pm.displayWarning(
-                "{} is a simple rig control and can't be "
-                " driven by another control".format(d)
+                "{} 是一个简单装配控制器，不能被另一个控制器驱动".format(d)
             )
 
 
@@ -304,8 +303,7 @@ def _create_simple_rig_root(
     rig_models = _get_simple_rig_root()
     if rig_models:
         pm.displayWarning(
-            "Simple rig root already exist in the "
-            "scene: {}".format(str(rig_models))
+            "场景中已存在简单装配根节点: {}".format(str(rig_models))
         )
         return
 
@@ -313,7 +311,7 @@ def _create_simple_rig_root(
         if pm.selected():
             selection = pm.selected()
         else:
-            pm.displayWarning("Selection is needed to create the root")
+            pm.displayWarning("需要选择对象才能创建根节点")
             return
 
     volCenter, radio, bb = _get_branch_bbox_data(selection)
@@ -420,7 +418,7 @@ def _create_custom_pivot(
         if pm.selected():
             selection = pm.selected()
         else:
-            pm.displayWarning("Selection is needed to create the root")
+            pm.displayWarning("需要选择对象才能创建根节点")
             return
 
     if not parent:
@@ -430,8 +428,7 @@ def _create_custom_pivot(
 
         else:
             pm.displayWarning(
-                "The latest selected element should be a CTL. "
-                "PARENT is needed!"
+                "最后选择的元素应该是一个控制器。需要指定父对象！"
             )
             return
 
@@ -687,10 +684,7 @@ def _collect_configuration_from_rig():
 
         else:
             pm.displayWarning(
-                "Configuration can not be collected for Ctl in "
-                "edit pivot mode or not reset SRT "
-                "Finish edit pivot for or reset "
-                "SRT: {}".format(c)
+                "无法收集控制器的配置，因为它处于编辑轴心点模式或未重置SRT。请完成编辑轴心点或重置SRT: {}".format(c)
             )
             return None
         shps = curve.collect_curve_data(c)
@@ -807,7 +801,7 @@ def _build_rig_from_configuration(configDict):
                 driven.append(obj[0])
             else:
                 pm.displayWarning(
-                    "Driven object {}: " "Can't be found.".format(drv)
+                    "驱动对象 {}: 找不到。".format(drv)
                 )
         t = datatypes.Matrix(ctl_conf["ctl_transform"])
         _create_control(
@@ -1087,9 +1081,7 @@ def convert_to_shifter_rig():
                         continue
                     if driven[0].getParent(-1).hasAttr("is_simple_rig"):
                         pm.displayWarning(
-                            "{}: cut for old rig hierarchy"
-                            "to avoid delete it when delete "
-                            "the old rig!!"
+                            "{}: 已从旧装配层级中切断，以避免删除旧装配时将其删除！"
                         )
                         pm.parent(driven[0], w=True)
                     _disconnect_driven(driven[0])
@@ -1133,9 +1125,9 @@ def convert_to_shifter_rig():
             if driven:
                 pm.parent(driven[0].getParent(-1), rig.model)
         else:
-            pm.displayWarning("The guide can not be extracted. Check log!")
+            pm.displayWarning("无法提取引导体。请检查日志！")
     else:
-        pm.displayWarning("No simple root to convert!")
+        pm.displayWarning("没有可转换的简单装配根节点！")
 
 
 # Edit ===========================================
@@ -1154,7 +1146,7 @@ def _remove_element_from_ctl(ctl, dagNode):
     # Check the ctl is reset
     if not _is_in_npo(ctl):
         pm.displayWarning(
-            "{}: have SRT values. Reset, before edit " "elements".format(ctl)
+            "{}: 具有SRT值。请先重置，再编辑元素。".format(ctl)
         )
         return
 
@@ -1168,7 +1160,7 @@ def _remove_element_from_ctl(ctl, dagNode):
         _update_driven(ctl)
     else:
         pm.displayWarning(
-            "{} is is not connected to the ctl {}".format(dagNode, ctl)
+            "{} 未连接到控制器 {}".format(dagNode, ctl)
         )
 
 
@@ -1185,7 +1177,7 @@ def _add_element_to_ctl(ctl, dagNode):
     # Check the ctl is reset
     if not _is_in_npo(ctl):
         pm.displayWarning(
-            "{}: have SRT values. Reset, before edit " "elements".format(ctl)
+            "{}: 具有SRT值。请先重置，再编辑元素。".format(ctl)
         )
         return
     # if dagNode is not in affected by pivot disconnect

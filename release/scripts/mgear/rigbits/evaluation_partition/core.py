@@ -2430,7 +2430,7 @@ def export_configuration(file_path, manager):
             json.dump(config, f, indent=2)
         return True
     except IOError as e:
-        cmds.warning(f"Failed to export configuration: {e}")
+        cmds.warning(f"导出配置失败: {e}")
         return False
 
 
@@ -2448,7 +2448,7 @@ def import_configuration(file_path):
             config = json.load(f)
         return config
     except (IOError, json.JSONDecodeError) as e:
-        cmds.warning(f"Failed to import configuration: {e}")
+        cmds.warning(f"导入配置失败: {e}")
         return None
 
 
@@ -2476,21 +2476,17 @@ def apply_configuration(config, mesh=None, create_shaders=True):
         ...     ]
         ... }
         >>> manager = apply_configuration(config)
-
-    Legacy v1.0 configs (with a long DAG path in ``mesh``) are also
-    accepted; the long path is honored if it still resolves,
-    otherwise the short name is looked up.
-
-    Raises:
-        RuntimeError: If the config mesh short name is ambiguous in the
-            current scene (matches more than one mesh transform).
     """
     target_mesh = mesh
     if not target_mesh:
         target_mesh = resolve_config_mesh(config)
         if not target_mesh:
-            cmds.warning("No mesh specified in configuration.")
+            cmds.warning("配置中未指定网格。")
             return None
+
+    if not cmds.objExists(target_mesh):
+        cmds.warning("网格 '{}' 不存在。".format(target_mesh))
+        return None
 
     # Create manager
     manager = PolygonGroupManager(target_mesh)
@@ -2498,7 +2494,7 @@ def apply_configuration(config, mesh=None, create_shaders=True):
     # Process groups from config
     groups_data = config.get("groups", [])
     if not groups_data:
-        cmds.warning("No groups found in configuration.")
+        cmds.warning("配置中未找到组。")
         return None
 
     for group_data in groups_data:

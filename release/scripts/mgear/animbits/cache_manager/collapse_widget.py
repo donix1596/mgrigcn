@@ -8,11 +8,11 @@ class QCollapse(QtWidgets.QWidget):
     SPEED = 150
 
     def __init__(self, parent=None, title="QCollapse"):
-        """ QCollapse is a collapsible widget with transition
+        """ QCollapse 是一个带过渡效果的可折叠部件
 
         Args:
-            parent (QWidget): parent widget for the QCollapseWidget
-            title (str): Title name for the widget
+            parent (QWidget): QCollapseWidget 的父级部件
+            title (str): 部件的标题名称
         """
 
         super(QCollapse, self).__init__(parent=parent)
@@ -31,7 +31,7 @@ class QCollapse(QtWidgets.QWidget):
         self.arrow_button.setCheckable(True)
         self.arrow_button.setChecked(False)
 
-        # create collapsible scroll area. This will reception use layout
+        # 创建可折叠滚动区域。这将使用布局来容纳内容
         self.scrool_area = QtWidgets.QScrollArea()
         self.scrool_area.setFrameStyle(6)
         self.scrool_area.setMinimumHeight(0)
@@ -39,19 +39,19 @@ class QCollapse(QtWidgets.QWidget):
         self.scrool_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Fixed)
 
-        # adds widgets to layout
+        # 添加部件到布局
         main_layout.addWidget(self.arrow_button)
         main_layout.addWidget(self.scrool_area)
 
         # creates animation group
         self.animation_group = QtCore.QParallelAnimationGroup()
 
-        # declares property to expand the QCollapse widget
+        # 声明属性以展开 QCollapse 部件
         self.animation_group.addAnimation(QtCore.QPropertyAnimation(
                                           self, b"minimumHeight"))
         self.animation_group.addAnimation(QtCore.QPropertyAnimation(
                                           self, b"maximumHeight"))
-        # declares property to expand the scroll area widget
+        # 声明属性以展开滚动区域部件
         self.animation_group.addAnimation(QtCore.QPropertyAnimation(
                                           self.scrool_area, b"maximumHeight"))
 
@@ -59,7 +59,7 @@ class QCollapse(QtWidgets.QWidget):
         self.arrow_button.clicked.connect(self.__run_animation)
 
     def __run_animation(self):
-        """ Runs the animation group
+        """运行动画组
         """
 
         # set arrow and animation direction state
@@ -74,10 +74,10 @@ class QCollapse(QtWidgets.QWidget):
         self.animation_group.start()
 
     def set_layout(self, layout):
-        """ Applies the given layout to the scroll area widget
+        """将给定布局应用到滚动区域部件
 
         Args:
-            layout (QLayout): layout widget to add into the QCollapse
+            layout (QLayout): 添加到 QCollapse 中的布局部件
         """
 
         # sets the layout into the scroll area

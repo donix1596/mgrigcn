@@ -30,11 +30,11 @@ def update_component_type_and_update_guide_with_dagmenu(*args):
     roots = gmcr.get_comp_root()
 
     if not roots:
-        pm.displayWarning("No components selected.")
+        pm.displayWarning("未选择任何组件。")
         return
 
     if not gmcr.are_comp_names_identical(roots):
-        pm.displayWarning("Selected components are not of the same comp type.")
+        pm.displayWarning("选中的组件类型不一致。")
         return
 
     root_comp_type = roots[0].getAttr("comp_type")
@@ -61,24 +61,24 @@ def update_component_type_and_update_guide_with_dagmenu(*args):
         buttons = [
             f"Only match '{base_type}' type",
             f"Match all containing '{sub_type}' type",
-            "Cancel",
+            "取消",
         ]
     else:
         buttons = [
             f"Only match '{base_type}' type",
-            f"Match all containing '{base_type}' type",
-            "Cancel",
+            f"匹配所有包含 '{base_type}' 类型",
+            "取消",
         ]
 
     choice = pm.confirmDialog(
-        title="Select Related Component Scope",
-        message="Please select the scope of related components to include",
+        title="选择相关组件范围",
+        message="请选择要包含的相关组件范围",
         button=buttons,
-        defaultButton=f"Match all containing '{base_type}' type",
-        cancelButton="Cancel",
-        dismissString="Cancel",
+        defaultButton=f"匹配所有包含 '{base_type}' 类型",
+        cancelButton="取消",
+        dismissString="取消",
     )
-    if choice == "Cancel":
+    if choice == "取消":
         return
 
     related_components = []
@@ -106,7 +106,7 @@ def update_component_type_and_update_guide_with_dagmenu(*args):
                     related_components.append(component)
 
     if not related_components:
-        pm.displayWarning(f"No components related to '{root_comp_type}' found.")
+        pm.displayWarning(f"未找到与 '{root_comp_type}' 相关的组件。")
         return
 
     custom_window = rc.exec_window(related_components)
