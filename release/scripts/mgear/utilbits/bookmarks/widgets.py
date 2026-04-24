@@ -303,23 +303,23 @@ class ChipButton(QtWidgets.QPushButton):
         """
         menu = QtWidgets.QMenu(self)
 
-        rename_action = menu.addAction("Rename")
-        color_action = menu.addAction("Change Color")
+        rename_action = menu.addAction("重命名")
+        color_action = menu.addAction("更改颜色")
         menu.addSeparator()
-        add_action = menu.addAction("Add Selected Items")
-        remove_action = menu.addAction("Remove Selected Items")
+        add_action = menu.addAction("添加选中项")
+        remove_action = menu.addAction("移除选中项")
         menu.addSeparator()
-        ns_action = menu.addAction("Use Selected Object's Namespace")
+        ns_action = menu.addAction("使用选中对象的命名空间")
         ns_action.setCheckable(True)
         ns_action.setChecked(
             bool(self.bookmark.get("use_selected_namespace", False))
         )
         menu.addSeparator()
-        shelf_action = menu.addAction("Add to Shelf")
+        shelf_action = menu.addAction("添加到工具架")
         menu.addSeparator()
-        toggle_menu_action = menu.addAction("Toggle Menu Bar")
+        toggle_menu_action = menu.addAction("切换菜单栏")
         menu.addSeparator()
-        delete_action = menu.addAction("Delete Bookmark")
+        delete_action = menu.addAction("删除书签")
 
         action = menu.exec_(event.globalPos())
 

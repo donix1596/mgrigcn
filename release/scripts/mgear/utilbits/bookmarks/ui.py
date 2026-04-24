@@ -35,7 +35,7 @@ class BookmarksUI(
     """
 
     TOOL_NAME = "Bookmarks"
-    TOOL_TITLE = "Bookmarks"
+    TOOL_TITLE = "书签"
 
     def __init__(self, parent=None):
         super(BookmarksUI, self).__init__(parent)
@@ -216,7 +216,7 @@ class BookmarksUI(
             str: Name like "Bookmark 1", "Bookmark 2", etc.
         """
         self._bookmark_counter += 1
-        return "Bookmark {}".format(self._bookmark_counter)
+        return "书签 {}".format(self._bookmark_counter)
 
     def _on_add_selection(self):
         """Create a selection bookmark from current Maya selection."""
@@ -508,7 +508,7 @@ class BookmarksUI(
                 chip.update_bookmark(bookmark)
             self._auto_save()
         else:
-            cmds.warning("Nothing selected to add")
+            cmds.warning("没有选中要添加的项")
 
     def _on_remove_items(self, bookmark):
         """Remove current Maya selection from bookmark.
@@ -523,7 +523,7 @@ class BookmarksUI(
                 chip.update_bookmark(bookmark)
             self._auto_save()
         else:
-            cmds.warning("No matching items to remove")
+            cmds.warning("没有匹配项可移除")
 
     def _on_toggle_namespace_mode(self, bookmark):
         """Flip the bookmark's use_selected_namespace toggle.
@@ -548,7 +548,7 @@ class BookmarksUI(
         result = core.add_bookmark_to_shelf(bookmark)
         if result:
             cmds.inViewMessage(
-                amg="Added <hl>{}</hl> to shelf".format(
+                amg="已将 <hl>{}</hl> 添加到工具架".format(
                     bookmark["name"]
                 ),
                 pos="topCenter",
@@ -612,9 +612,9 @@ class BookmarksUI(
 
     def _on_export(self):
         """Export bookmarks to a .sbk file."""
-        file_filter = "Bookmarks (*{})".format(core.CONFIG_FILE_EXT)
+        file_filter = "书签 (*{})".format(core.CONFIG_FILE_EXT)
         file_path, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Export Bookmarks", "", file_filter
+            self, "导出书签", "", file_filter
         )
         if not file_path:
             return
@@ -624,9 +624,9 @@ class BookmarksUI(
 
     def _on_import(self):
         """Import bookmarks from a .sbk file."""
-        file_filter = "Bookmarks (*{})".format(core.CONFIG_FILE_EXT)
+        file_filter = "书签 (*{})".format(core.CONFIG_FILE_EXT)
         file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Import Bookmarks", "", file_filter
+            self, "导入书签", "", file_filter
         )
         if not file_path:
             return
@@ -639,9 +639,9 @@ class BookmarksUI(
         if self._bookmarks:
             result = QtWidgets.QMessageBox.question(
                 self,
-                "Import Bookmarks",
-                "Replace existing bookmarks?\n\n"
-                "Yes = Replace, No = Append",
+                "导入书签",
+                "替换现有书签？\n\n"
+                "是 = 替换, 否 = 追加",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.Yes,
             )
