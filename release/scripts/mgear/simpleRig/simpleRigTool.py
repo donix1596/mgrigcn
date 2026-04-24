@@ -1081,7 +1081,7 @@ def convert_to_shifter_rig():
                         continue
                     if driven[0].getParent(-1).hasAttr("is_simple_rig"):
                         pm.displayWarning(
-                            "{}: 已从旧装配层级中切断，以避免删除旧装配时将其删除！"
+                            "{}: 已从旧装配层级中切断，以避免删除旧装配时将其删除！".format(d)
                         )
                         pm.parent(driven[0], w=True)
                     _disconnect_driven(driven[0])

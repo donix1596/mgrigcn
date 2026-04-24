@@ -80,7 +80,7 @@ def is_odd(num):
     Returns:
         bool: True or False
     """
-    return num % 2
+    return num % 2 == 1
 
 
 def gatherCustomModuleDirectories(

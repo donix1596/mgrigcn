@@ -136,7 +136,7 @@ def reset_to_default(mode, clear_sel=False):
                         pm.setAttr(node.attr(attr), value)
 
     # Driver Ctls and Anim Ctls
-    elif mode == "drv" or "anim":
+    elif mode == "drv" or mode == "anim":
         select_all(mode)
         for item in pm.ls(sl=True):
             for attr, value in attrs_dict.items():

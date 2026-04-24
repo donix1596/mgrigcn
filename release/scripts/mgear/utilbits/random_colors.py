@@ -780,18 +780,36 @@ class RandomColorTool(QtWidgets.QWidget):
                 _random_assignments.pop(shape, None)
 
             created_count = 0
+            reuse_materials = []
+            if self.reuse_materials_cb.isChecked():
+                # Find existing unused RandomColor materials
+                all_materials = cmds.ls(type='shader') or []
+                reuse_materials = [m for m in all_materials if m.startswith(RANDOM_COLOR_PREFIX)]
+                # Filter out ones that are currently assigned
+                assigned_sgs = set(_random_assignments.values()) if _random_assignments else set()
+                reuse_materials = [m for m in reuse_materials
+                                   if "{}{}".format(m, "SG") not in assigned_sgs
+                                   and not cmds.sets("{}{}".format(m, "SG"), query=True)]
+
             for transform, color in zip(transforms, colors):
                 short_name = (
                     transform.split("|")[-1].replace(":", "_")
                 )
-                material_name = "{prefix}{name}_{rand}".format(
-                    prefix=RANDOM_COLOR_PREFIX,
-                    name=short_name,
-                    rand=random.randint(1000, 9999),
-                )
-                shader, sg = self.create_openpbr_shader(
-                    material_name, color
-                )
+                if reuse_materials:
+                    # Reuse existing material - just update its color
+                    mat = reuse_materials.pop(0)
+                    cmds.setAttr("{}.baseColor".format(mat), color[0], color[1], color[2], type='double3')
+                    shader = mat
+                    sg = "{}SG".format(mat)
+                else:
+                    material_name = "{prefix}{name}_{rand}".format(
+                        prefix=RANDOM_COLOR_PREFIX,
+                        name=short_name,
+                        rand=random.randint(1000, 9999),
+                    )
+                    shader, sg = self.create_openpbr_shader(
+                        material_name, color
+                    )
                 self.assign_material(transform, sg)
                 created_count += 1
 
