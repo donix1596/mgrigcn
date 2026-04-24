@@ -22,14 +22,13 @@ except NameError:
     long = int
 
 def __create_preference_file():
-    """ Creates the json file to store preferences for the cache manager
+    """ 创建缓存管理器首选项 JSON 文件
 
-    The preference file is created inside the preference folder. It's placement
-    is defined by the MAYA_APP_DIR environment variable and it's name by the
-    _MANAGER_PREFERENCE_FILE constant
+    首选项文件创建在首选项文件夹内，其位置由
+    MAYA_APP_DIR 环境变量定义，名称由 _MANAGER_PREFERENCE_FILE 常量定义。
 
     Returns:
-        str: Path to the preference file
+        str: 首选项文件路径
     """
 
     try:
@@ -45,45 +44,44 @@ def __create_preference_file():
         pref_file.close()
         return pref_file.name
     except Exception as e:
-        message = "Contact mGear's developers reporting this issue to get help"
+        message = "请联系mGear开发者报告此问题以获得帮助"
         print("{} - {} / {}".format(type(e).__name__, e,
                                     message))
 
 
 def __create_preference_folder():
-    """ Creates the preference folder for the cache manager
+    """ 创建缓存管理器的首选项文件夹
 
-    The preference folder gets created wherever the MAYA_APP_DIR environment
-    variables points at.
+    首选项文件夹在 MAYA_APP_DIR 环境变量指向的位置创建。
     """
 
     try:
         os.makedirs(_MANAGER_PREFERENCE_PATH)
     except Exception as e:
-        message = "Contact mGear's developers reporting this issue to get help"
+        message = "请联系mGear开发者报告此问题以获得帮助"
         print("{} - {} / {}".format(type(e).__name__, e,
                                     message))
 
 
 def __is_maya_batch():
-    """ Returns if the current session is a Maya batch session or not
+    """返回当前会话是否为 Maya 批处理会话
 
     Returns:
-        bool: if Maya is on batch mode or not
+        bool: Maya 是否处于批处理模式
     """
 
     return cmds.about(batch=True)
 
 
 def __set_reference_edits(ref_edit_default, value):
-    """ Sets the reference edits lock/unlock preference value to the given value
+    """将引用编辑锁定/解锁首选项值设置为给定值
 
-    We only act on the preference if needed. If user already allows reference
-    lock/unlock edits then we don't change it's preferences
+    仅在需要时才对首选项进行操作。如果用户已经允许引用
+    锁定/解锁编辑，则不更改其首选项。
 
     Args:
-        ref_edit_default (bool): the original state of the preferences
-        value (bool): whether or not lock/unlock edits are allowed
+        ref_edit_default (bool): 首选项的原始状态
+        value (bool): 是否允许锁定/解锁编辑
     """
 
     # we allow references edits
@@ -92,7 +90,7 @@ def __set_reference_edits(ref_edit_default, value):
 
 
 def check_gpu_plugin():
-    """ Check for the gpuCache plugin load
+    """检查 gpuCache 插件是否已加载
     """
 
     if not cmds.pluginInfo('gpuCache', query=True, loaded=True):
@@ -100,11 +98,10 @@ def check_gpu_plugin():
 
 
 def create_cache_manager_preference_file():
-    """ Creates the Animbits cache manager preference file
+    """创建 Animbits 缓存管理器首选项文件
 
     Returns:
-        str or None: Path to the preference file if existing or created one.
-                     None if failed
+        str 或 None: 如果存在或成功创建则返回首选项文件路径，失败返回 None
     """
 
     pref_file = get_preference_file()
@@ -126,7 +123,7 @@ def delete_cache_file(file_path):
     try:
         os.remove(file_path)
     except Exception as e:
-        message = "Contact mGear's developers reporting this issue to get help"
+        message = "请联系mGear开发者报告此问题以获得帮助"
         print("{} - {} / {}".format(type(e).__name__, e,
                                     message))
 
@@ -411,7 +408,7 @@ def set_preference_file_setting(setting, value):
         pref_file.close()
 
     except Exception as e:
-        message = "Contact mGear's developers reporting this issue to get help"
+        message = "请联系mGear开发者报告此问题以获得帮助"
         print("{} - {} / {}".format(type(e).__name__, e,
                                     message))
         return None

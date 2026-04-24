@@ -142,7 +142,7 @@ def export_weights_selected(filePath=None, *args):
     if oSel:
         deformer = oSel[0]
     else:
-        pm.displayWarning("Nothing selected to export weights")
+        pm.displayWarning("未选择任何对象来导出权重")
         return
 
     if not filePath:
@@ -163,7 +163,7 @@ def import_weights_selected(filePath=None, *args):
     if oSel:
         deformer = oSel[0]
     else:
-        pm.displayWarning("Nothing selected to import weights")
+        pm.displayWarning("未选择任何对象来导入权重")
         return
 
     if not filePath:
@@ -183,7 +183,7 @@ def file_browser(mode=1):
     Returns:
         str: file path
     """
-    fileFilters = "Deformer Weigth map (*{})".format(FILE_EXT)
+    fileFilters = "变形器权重图 (*{})".format(FILE_EXT)
     startDir = pm.workspace(q=True, rootDirectory=True)
     filePath = pm.fileDialog2(
         fileMode=mode, startingDirectory=startDir, fileFilter=fileFilters

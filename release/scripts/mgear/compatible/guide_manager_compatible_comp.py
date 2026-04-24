@@ -46,7 +46,7 @@ def get_component_list():
                     importlib.reload(module)
                 comp_list.append(module.TYPE)
             except Exception as e:
-                pm.displayWarning("Failed to load component: {}".format(comp_name))
+                pm.displayWarning("加载组件失败：{}".format(comp_name))
                 pm.displayError(str(e))
                 pm.displayError(traceback.format_exc())
 
@@ -61,7 +61,7 @@ def get_comp_root():
     """
     oSel = pm.selected()
     if not oSel:
-        pm.displayWarning("Please select at least one object from the component guide")
+        pm.displayWarning("请从组件指南中至少选择一个对象")
         return []
 
     roots = []
@@ -123,9 +123,9 @@ def set_selected_component_type_is_manager_current_selected_Component(roots, com
             if node and node.hasAttr("comp_type"):
                 node.comp_type.set(comp)
             else:
-                pm.displayWarning("Selected object is not a valid mGear component root")
+                pm.displayWarning("选中的对象不是有效的mGear组件根")
     else:
-        pm.displayWarning("Please select at least one mGear component")
+        pm.displayWarning("请至少选择一个mGear组件")
 
 
 def update_component_type_and_update_guide(component, update_guide=False):
@@ -138,10 +138,10 @@ def update_component_type_and_update_guide(component, update_guide=False):
     """
     root_components = get_comp_root()
     if not root_components:
-        pm.displayWarning("No valid components selected")
+        pm.displayWarning("未选择有效的组件")
         return
     if not are_comp_names_identical(root_components):
-        pm.displayWarning("Selected components are not of the same type")
+        pm.displayWarning("选中的组件类型不一致")
         return
     set_selected_component_type_is_manager_current_selected_Component(
         root_components, component

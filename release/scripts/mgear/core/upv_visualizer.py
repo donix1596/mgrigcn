@@ -1,8 +1,8 @@
-"""UPV Visualization Module.
+"""UPV可视化模块。
 
-Creates a pole vector (UPV) visualization node network for Maya's
-guide stage. Uses only nodes available in Maya 2022+ for backwards
-compatibility (plusMinusAverage, multiplyDivide, etc.).
+为Maya引导阶段创建极向量(UPV)可视化节点网络。
+仅使用Maya 2022+中可用的节点以保持向后兼容性
+(plusMinusAverage, multiplyDivide等)。
 """
 
 import mgear.pymaya as pm
@@ -10,16 +10,16 @@ from mgear.core import node as nod
 
 
 def upv_vis_decompose_nodes(root, elbow, wrist, eff):
-    """Create decompose matrix nodes for guide nodes.
+    """为引导节点创建分解矩阵节点。
 
-    Args:
-        root (PyNode): Root guide node.
-        elbow (PyNode): Elbow guide node.
-        wrist (PyNode): Wrist guide node.
-        eff (PyNode): End effector guide node.
+    参数:
+        root (PyNode): 根引导节点。
+        elbow (PyNode): 肘部引导节点。
+        wrist (PyNode): 腕部引导节点。
+        eff (PyNode): 末端执行器引导节点。
 
-    Returns:
-        list: Four decomposeMatrix nodes [root, elbow, wrist, eff].
+    返回:
+        list: 四个分解矩阵节点 [root, elbow, wrist, eff]。
     """
     guide_nodes = [root, elbow, wrist, eff]
     return [
@@ -29,19 +29,19 @@ def upv_vis_decompose_nodes(root, elbow, wrist, eff):
 
 
 def create_vector_subtraction_nodes(elbow, wrist, root, eff):
-    """Create vector subtraction node network.
+    """创建向量减法节点网络。
 
-    Uses plusMinusAverage (operation=2) instead of subtract nodes
-    for Maya 2022+ compatibility.
+    使用plusMinusAverage (operation=2)替代减法节点
+    以兼容Maya 2022+。
 
-    Args:
-        elbow (PyNode): Elbow guide node.
-        wrist (PyNode): Wrist guide node.
-        root (PyNode): Root guide node.
-        eff (PyNode): End effector guide node.
+    参数:
+        elbow (PyNode): 肘部引导节点。
+        wrist (PyNode): 腕部引导节点。
+        root (PyNode): 根引导节点。
+        eff (PyNode): 末端执行器引导节点。
 
-    Returns:
-        dict: PMA nodes keyed by role.
+    返回:
+        dict: 按角色键控的PMA节点。
     """
     names = {
         "crossProduct_elbow": "{}_crossProduct".format(elbow.nodeName()),
@@ -60,12 +60,12 @@ def create_vector_subtraction_nodes(elbow, wrist, root, eff):
 
 
 def connect_decompose_to_vector_nodes(decompose_nodes, vector_nodes):
-    """Connect decompose matrix nodes to vector subtraction nodes.
+    """将分解矩阵节点连接到向量减法节点。
 
-    Args:
-        decompose_nodes (list): DecomposeMatrix nodes
-            [root, elbow, wrist, eff].
-        vector_nodes (dict): PMA subtraction node dictionary.
+    参数:
+        decompose_nodes (list): 分解矩阵节点
+            [root, elbow, wrist, eff]。
+        vector_nodes (dict): PMA减法节点字典。
     """
     decm = decompose_nodes
     connections = (
@@ -88,13 +88,13 @@ def connect_decompose_to_vector_nodes(decompose_nodes, vector_nodes):
 
 
 def calculate_vector_lengths(vector_nodes):
-    """Calculate vector lengths from PMA subtraction outputs.
+    """从PMA减法输出计算向量长度。
 
-    Args:
-        vector_nodes (dict): PMA subtraction node dictionary.
+    参数:
+        vector_nodes (dict): PMA减法节点字典。
 
-    Returns:
-        dict: Length nodes keyed by 'eff', 'elbow', 'wrist'.
+    返回:
+        dict: 按'eff', 'elbow', 'wrist'键控的长度节点。
     """
     length_nodes = {}
     for joint_name in ("eff", "elbow", "wrist"):
@@ -114,15 +114,15 @@ def calculate_vector_lengths(vector_nodes):
 
 
 def setup_math_operations(root, length_nodes, float_value=0.5):
-    """Set up math operation nodes for pole vector length.
+    """设置极向量长度的数学运算节点。
 
-    Args:
-        root (PyNode): Root guide node.
-        length_nodes (dict): Length nodes dictionary.
-        float_value (float, optional): Multiplication coefficient.
+    参数:
+        root (PyNode): 根引导节点。
+        length_nodes (dict): 长度节点字典。
+        float_value (float, optional): 乘法系数。
 
-    Returns:
-        tuple: (half_one_float_node, math_nodes dict).
+    返回:
+        tuple: (half_one_float_node, math_nodes字典)。
     """
     # Compute the maximum of a minimum floor value and three
     # vector lengths.  The 'max' node only exists in Maya
@@ -176,17 +176,17 @@ def setup_math_operations(root, length_nodes, float_value=0.5):
 
 
 def setup_cross_product_chain(root, elbow, wrist, vector_nodes, float_value):
-    """Set up cross product calculation chain.
+    """设置叉积计算链。
 
-    Args:
-        root (PyNode): Root guide node.
-        elbow (PyNode): Elbow guide node.
-        wrist (PyNode): Wrist guide node.
-        vector_nodes (dict): PMA vector node dictionary.
-        float_value (float): Length calculation coefficient.
+    参数:
+        root (PyNode): 根引导节点。
+        elbow (PyNode): 肘部引导节点。
+        wrist (PyNode): 腕部引导节点。
+        vector_nodes (dict): PMA向量节点字典。
+        float_value (float): 长度计算系数。
 
-    Returns:
-        tuple: (normalize_node, half_multiply_node, math_nodes).
+    返回:
+        tuple: (normalize_node, half_multiply_node, math_nodes)。
     """
     length_nodes = calculate_vector_lengths(vector_nodes)
     half_multiply_node, math_nodes = setup_math_operations(
@@ -290,14 +290,14 @@ def setup_cross_product_chain(root, elbow, wrist, vector_nodes, float_value):
 def setup_upv_position_calculation(
     elbow, upv, normalize_node, half_multiply_node, decompose_nodes
 ):
-    """Calculate the final UPV position.
+    """计算最终的UPV位置。
 
-    Args:
-        elbow (PyNode): Elbow guide node.
-        upv (PyNode): Pole vector guide node.
-        normalize_node (PyNode): Normalized cross product node.
-        half_multiply_node (PyNode): Length multiplication node.
-        decompose_nodes (list): DecomposeMatrix node list.
+    参数:
+        elbow (PyNode): 肘部引导节点。
+        upv (PyNode): 极向量引导节点。
+        normalize_node (PyNode): 归一化叉积节点。
+        half_multiply_node (PyNode): 长度乘法节点。
+        decompose_nodes (list): 分解矩阵节点列表。
     """
     upv_mul = nod.createMulNode(
         [
@@ -328,13 +328,13 @@ def setup_upv_position_calculation(
 
 
 def setup_visibility_and_matrix(root, root_decompose, upv, upvcrv):
-    """Set up visibility and matrix connections.
+    """设置可见性和矩阵连接。
 
-    Args:
-        root (PyNode): Root guide node.
-        root_decompose (PyNode): Decompose matrix node from root.
-        upv (PyNode): Pole vector guide node.
-        upvcrv (PyNode): Pole vector display curve.
+    参数:
+        root (PyNode): 根引导节点。
+        root_decompose (PyNode): 来自根的分解矩阵节点。
+        upv (PyNode): 极向量引导节点。
+        upvcrv (PyNode): 极向量显示曲线。
     """
     root_decompose.outputScale >> upv.scale
     root.worldInverseMatrix[0] >> upv.offsetParentMatrix
@@ -342,16 +342,16 @@ def setup_visibility_and_matrix(root, root_decompose, upv, upvcrv):
 
 
 def create_upv_system(root, elbow, wrist, eff, upvcrv, upv, float_value=0.5):
-    """Create a complete UPV visualization system.
+    """创建完整的UPV可视化系统。
 
-    Args:
-        root (PyNode): Root guide node.
-        elbow (PyNode): Elbow guide node.
-        wrist (PyNode): Wrist guide node.
-        eff (PyNode): End effector guide node.
-        upvcrv (PyNode): Pole vector display curve node.
-        upv (PyNode): Pole vector guide node.
-        float_value (float, optional): Pole vector length coefficient.
+    参数:
+        root (PyNode): 根引导节点。
+        elbow (PyNode): 肘部引导节点。
+        wrist (PyNode): 腕部引导节点。
+        eff (PyNode): 末端执行器引导节点。
+        upvcrv (PyNode): 极向量显示曲线节点。
+        upv (PyNode): 极向量引导节点。
+        float_value (float, optional): 极向量长度系数。
     """
     decompose_nodes = upv_vis_decompose_nodes(root, elbow, wrist, eff)
     if not decompose_nodes:

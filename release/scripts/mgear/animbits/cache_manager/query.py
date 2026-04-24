@@ -6,9 +6,9 @@ import os
 import json
 from maya import cmds
 
-# ==============================================================================
-# CONSTANTS
-# ==============================================================================
+# =============================================================================
+# 常量
+# =============================================================================
 
 _MANAGER_CACHE_DESTINATION = os.getenv("MGEAR_CACHE_MANAGER_CACHE_DESTINATION")
 _MANAGER_MODEL_GROUP = os.getenv("MGEAR_CACHE_MANAGER_MODEL_GROUP")
@@ -19,15 +19,14 @@ _MANAGER_RIG_ATTRIBUTE = os.getenv("MGEAR_CACHE_MANAGER_RIG_ATTRIBUTE")
 
 
 def find_model_group_inside_rig(geo_node, rig_node):
-    """ Finds the given group name inside the hierarchy of a rig
+    """在装配体的层级结构中查找给定的组名
 
     Args:
-        geo_node (str): geometry group transform node containing the shapes to
-                        cache
-        rig_node (str): Rig root node containing the geo_node
+        geo_node (str): 包含要缓存形状的几何组变换节点
+        rig_node (str): 包含 geo_node 的装配体根节点
 
     Returns:
-        str or None: Full path to the geo_node if found else None
+        str 或 None: 找到时返回 geo_node 的完整路径，否则返回 None
     """
 
     try:
@@ -49,33 +48,31 @@ def find_model_group_inside_rig(geo_node, rig_node):
         if model_group:
             return model_group
         else:
-            print("Could not find the geo node inside the rig node.")
+            print("无法在装配体节点中找到几何节点。")
 
     except Exception as e:
         if cmds.objExists("{}_cache".format(rig_node)):
             return
-        print("Could not find the geo node inside the rig node. "
-              "Contact mGear's developers reporting this issue to get help")
+        print("无法在装配体节点中找到几何节点。"
+              "请联系mGear开发者报告此问题以获得帮助")
         raise e
 
 
 def get_cache_destination_path():
-    """ Returns the cache destination path
+    """返回缓存目标路径
 
-    This methods returns a path pointing to where the cache manager will store
-    the GPU caches.
+    此方法返回缓存管理器将存储 GPU 缓存的路径。
 
-    If the **MGEAR_CACHE_MANAGER_CACHE_DESTINATION** environment
-    variable has been set it will return whatever path has been set if valid.
-    If none has been set or fails to use that path this method tries then
-    to return whatever settings has been set on the **cache manager preferences
-    file**.
+    如果设置了 **MGEAR_CACHE_MANAGER_CACHE_DESTINATION** 环境变量，
+    它将返回该有效路径。
 
-    Finally if no environment variable or preference file is been set then we
-    use the **OS TEMP** folder as destination path.
+    如果未设置或无法使用该路径，此方法将尝试返回
+    **缓存管理器首选项文件** 中设置的路径。
+
+    最后，如果未设置环境变量或首选项文件，则使用 **系统临时文件夹** 作为目标路径。
 
     Returns:
-        str: cache destination path
+        str: 缓存目标路径
     """
 
     # if env variable is set
@@ -93,44 +90,40 @@ def get_cache_destination_path():
 
 
 def get_time_stamp():
-    """ Returns the date and time in a file name friendly way
+    """以文件名友好的方式返回日期和时间
 
-    This is used to create the cache file name a unique name in order to avoid
-    clashing files overwriting other cache files been used on other specific
-    file scenes
+    这用于创建缓存文件名，使其具有唯一名称，以避免
+    不同特定场景使用的缓存文件发生冲突覆盖。
 
     Returns:
-        str: time stamp (19-05-12_14-10-55) year-month-day_hour-minutes-seconds
+        str: 时间戳 (19-05-12_14-10-55) 年-月-日_时-分-秒
     """
 
     return datetime.now().strftime('%y-%m-%d_%H-%M-%S')
 
 
 def get_model_group(ignore_selection=False):
-    """ Returns the model group name to cache
+    """返回要缓存的模型组名称
 
-    This methods returns a string with the name of the transform node to use
-    when caching the geometry/model
+    此方法返回缓存几何体/模型时使用的变换节点名称。
 
-    If the **MGEAR_CACHE_MANAGER_MODEL_GROUP** environment
-    variable has been set it will return the name stored in it.
-    If none has been set or fails to use that name this method tries then
-    to return whatever settings has been set on the **cache manager preferences
-    file**.
+    如果设置了 **MGEAR_CACHE_MANAGER_MODEL_GROUP** 环境变量，
+    将返回其中存储的名称。
 
-    Finally if no environment variable or preference file is been set then we
-    fall back to selection.
+    如果未设置或无法使用该名称，此方法将尝试返回
+    **缓存管理器首选项文件** 中设置的名称。
 
-    This doesn't check if the returner values is a valid value like if the
-    transform node exists. This is because we do not know at this stage if the
-    asset it inside a namespace or something scene specific. As this is generic
-    only checks for that generic part are been made.
+    最后，如果未设置环境变量或首选项文件，则回退到选择。
+
+    此方法不检查返回值是否有效（例如变换节点是否存在），
+    因为此阶段不知道资产是否在命名空间内或有场景特定设置。
+    这是通用检查，只检查通用部分。
 
     Args:
-        ignore_selection (bool): whether it falls back to the selected group
+        ignore_selection (bool): 是否回退到选择的组
 
     Returns:
-        str or None: group name if anything or None
+        str 或 None: 组名或 None
     """
 
     # if env variable is set
@@ -149,46 +142,45 @@ def get_model_group(ignore_selection=False):
 
 
 def get_preference_file():
-    """ Returns the preference file path and name
+    """返回首选项文件路径和名称
 
     Returns:
-        str: preference file path and name
+        str: 首选项文件路径和名称
     """
 
     return "{}/{}".format(_MANAGER_PREFERENCE_PATH, _MANAGER_PREFERENCE_FILE)
 
 
 def get_preference_file_cache_destination_path():
-    """ Returns the folder path set on the preference file
+    """返回首选项文件中设置的文件夹路径
 
     Returns:
-        str or None: The path stored in the preference file or None if invalid
+        str 或 None: 首选项文件中存储的路径，无效时返回 None
     """
 
     return read_preference_key(search_key="cache_manager_cache_path")
 
 
 def get_preference_file_model_group():
-    """ Returns the model group name set on the preference file
+    """返回首选项文件中设置的模型组名称
 
     Returns:
-        str or None: Model group name stored in the preference file
-                     or None if invalid
+        str 或 None: 首选项文件中存储的模型组名称，无效时返回 None
     """
 
     return read_preference_key(search_key="cache_manager_model_group")
 
 
 def get_scene_rigs():
-    """ The rigs from current Maya session
+    """当前 Maya 会话中的装配体
 
-    This method search for rigs in your current Maya scene.
-    If the MGEAR_CACHE_MANAGER_RIG_ATTRIBUTE has been set it will try to find
-    rigs based on the attribute set on the environment variable. Otherwise
-    it will use the attribute **gear_version** in order to find rigs in scene.
+    此方法在当前 Maya 场景中搜索装配体。
+    如果设置了 MGEAR_CACHE_MANAGER_RIG_ATTRIBUTE，将尝试根据
+    环境变量设置的属性查找装配体。否则将使用
+    **gear_version** 属性来查找场景中的装配体。
 
     Returns:
-        list or None: mGear rig top node or None
+        list 或 None: mGear 装配体顶层节点或 None
     """
 
     if _MANAGER_RIG_ATTRIBUTE:
@@ -218,14 +210,14 @@ def get_scene_rigs():
 
 
 def get_timeline_values():
-    """ Returns the min and max keyframe values from the current playback range
+    """返回当前播放范围的最小和最大关键帧值
 
-    In order to give more freedom to the artist we always evaluate the playback
-    range and not the animation range so that artists can choose what range
-    to use when creating the GPU cache
+    为了给艺术家更多自由度，我们始终评估播放范围
+    而不是动画范围，以便艺术家可以选择创建 GPU 缓存时
+    使用的范围。
 
     Returns:
-        float, float: min and max value
+        float, float: 最小值和最大值
     """
 
     # get user timeline playback frame range
@@ -236,10 +228,10 @@ def get_timeline_values():
 
 
 def is_rig(rig_node):
-    """ Returns whether the given rig node is in srig state or caching state
+    """返回给定的装配体节点是否处于装配状态或缓存状态
 
     Args:
-        rig_node (str): rig node name
+        rig_node (str): 装配体节点名称
     """
 
     if not cmds.objExists(rig_node) or (
@@ -250,10 +242,10 @@ def is_rig(rig_node):
 
 
 def read_preference_key(search_key):
-    """ Returns the preference stored on the pref file for the given key
+    """返回首选项文件中给定键存储的首选项
 
     Returns:
-        str or None: The path stored in the preference file or None if invalid
+        str 或 None: 首选项文件中存储的路径，无效时返回 None
     """
 
     # preference file
@@ -271,11 +263,11 @@ def read_preference_key(search_key):
             if len(value) and type(value) != int:
                 return value
 
-            print("Key -{}- saved on preference file is invalid for {}"
+            print("首选项文件中保存的键 -{}- 对于 {} 无效"
                   .format(value, search_key))
 
     except Exception as e:
-        message = "Contact mGear's developers reporting this issue to get help"
+        message = "请联系mGear开发者报告此问题以获得帮助"
         print("{} - {} / {}".format(type(e).__name__, e,
                                     message))
         return

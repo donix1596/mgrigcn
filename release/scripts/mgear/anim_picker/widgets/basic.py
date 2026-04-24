@@ -331,7 +331,7 @@ class BackgroundWidget(QtWidgets.QLabel):
             self.setStyleSheet("QLabel {border-image: url('{}');}".format(bg))
 
     def set_background(self, path=None):
-        """Set character snapshot picture"""
+        """设置角色快照图片"""
         if not (path and os.path.exists(path)):
             path = None
             self.background = None
@@ -345,7 +345,7 @@ class BackgroundWidget(QtWidgets.QLabel):
         """Get file dialog window starting in default folder"""
         imgs_dir = get_images_folder_path()
         file_path = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Choose picture", imgs_dir
+            self, "选择图片", imgs_dir
         )
         # Filter return result (based on qt version)
         if isinstance(file_path, tuple):
@@ -383,7 +383,7 @@ class SnapshotWidget(BackgroundWidget):
         return image_path
 
     def set_background(self, path=None):
-        """Set character snapshot picture"""
+        """设置角色快照图片"""
         if not (path and os.path.exists(path)):
             path = self._get_default_snapshot()
             self.background = None
@@ -404,12 +404,12 @@ class SnapshotWidget(BackgroundWidget):
         menu = QtWidgets.QMenu(self)
 
         # Add choose action
-        choose_action = QtWidgets.QAction("Select Picture", None)
+        choose_action = QtWidgets.QAction("选择图片", None)
         choose_action.triggered.connect(self.select_image)
         menu.addAction(choose_action)
 
         # Add reset action
-        reset_action = QtWidgets.QAction("Reset", None)
+        reset_action = QtWidgets.QAction("重置", None)
         reset_action.triggered.connect(self.reset_image)
         menu.addAction(reset_action)
 
@@ -444,26 +444,26 @@ class BackgroundOptionsDialog(QtWidgets.QDialog):
 
     def __init__(self, tabWidget, parent=None):
         super(BackgroundOptionsDialog, self).__init__(parent)
-        self.setWindowTitle("Set background size")
+        self.setWindowTitle("设置背景大小")
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
         self.tabWidget = tabWidget
         self.keep_aspect_ratio = True
 
         if not self.tabWidget.currentWidget().get_background(0):
-            cmds.warning("Current view has no background!")
+            cmds.warning("当前视图没有背景！")
             return None
 
-        width_label = QtWidgets.QLabel("Width")
+        width_label = QtWidgets.QLabel("宽度")
         self.width_box = QtWidgets.QSpinBox()
         self.width_box.setRange(1, 6000)
-        height_label = QtWidgets.QLabel("Height")
+        height_label = QtWidgets.QLabel("高度")
         self.height_box = QtWidgets.QSpinBox()
         self.height_box.setRange(1, 6000)
-        self.aspect_button = QtWidgets.QPushButton("Maintain Aspect Ratio")
+        self.aspect_button = QtWidgets.QPushButton("保持宽高比")
         self.aspect_button.setCheckable(True)
         self.aspect_button.setChecked(True)
-        self.reset_button = QtWidgets.QPushButton("Reset Size")
+        self.reset_button = QtWidgets.QPushButton("重置大小")
 
         self.main_layout = QtWidgets.QVBoxLayout(self)
 
