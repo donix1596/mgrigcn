@@ -131,23 +131,23 @@ class MatcapViewerUI(
     def create_actions(self):
         """Create QActions for menus."""
         # Edit menu
-        self.refresh_action = QtWidgets.QAction("Refresh", self)
+        self.refresh_action = QtWidgets.QAction("刷新", self)
         self.clear_matcap_action = QtWidgets.QAction(
-            "Clear Matcap", self
+            "清除 Matcap", self
         )
 
         # Settings menu
         self.edit_folders_action = QtWidgets.QAction(
-            "Edit Source Folders...", self
+            "编辑源文件夹...", self
         )
         self.show_labels_action = QtWidgets.QAction(
-            "Show Labels", self
+            "显示标签", self
         )
         self.show_labels_action.setCheckable(True)
         self.show_labels_action.setChecked(False)
 
         self.show_favorites_action = QtWidgets.QAction(
-            "Show Only Favorites", self
+            "仅显示收藏", self
         )
         self.show_favorites_action.setCheckable(True)
         self.show_favorites_action.setChecked(False)
@@ -156,21 +156,21 @@ class MatcapViewerUI(
         self._apply_action_group.setExclusive(True)
 
         self.apply_all_action = QtWidgets.QAction(
-            "Apply to All Meshes", self
+            "应用到所有网格", self
         )
         self.apply_all_action.setCheckable(True)
         self.apply_all_action.setChecked(True)
         self._apply_action_group.addAction(self.apply_all_action)
 
         self.apply_selected_action = QtWidgets.QAction(
-            "Apply to Selected Meshes", self
+            "应用到所选网格", self
         )
         self.apply_selected_action.setCheckable(True)
         self._apply_action_group.addAction(self.apply_selected_action)
 
         # Help menu
         self.open_library_action = QtWidgets.QAction(
-            "Matcap Library (GitHub)", self
+            "Matcap 库 (GitHub)", self
         )
 
     def create_widgets(self):
@@ -182,11 +182,11 @@ class MatcapViewerUI(
             QtCore.Qt.PreventContextMenu
         )
 
-        edit_menu = self.menu_bar.addMenu("Edit")
+        edit_menu = self.menu_bar.addMenu("编辑")
         edit_menu.addAction(self.refresh_action)
         edit_menu.addAction(self.clear_matcap_action)
 
-        settings_menu = self.menu_bar.addMenu("Settings")
+        settings_menu = self.menu_bar.addMenu("设置")
         settings_menu.addAction(self.edit_folders_action)
         settings_menu.addSeparator()
         settings_menu.addAction(self.show_labels_action)
@@ -195,12 +195,12 @@ class MatcapViewerUI(
         settings_menu.addAction(self.apply_all_action)
         settings_menu.addAction(self.apply_selected_action)
 
-        help_menu = self.menu_bar.addMenu("Help")
+        help_menu = self.menu_bar.addMenu("帮助")
         help_menu.addAction(self.open_library_action)
 
         # Search bar
         self.search_input = QtWidgets.QLineEdit()
-        self.search_input.setPlaceholderText("Search matcaps...")
+        self.search_input.setPlaceholderText("搜索 matcaps...")
         self.search_input.setClearButtonEnabled(True)
 
         # Matcap grid

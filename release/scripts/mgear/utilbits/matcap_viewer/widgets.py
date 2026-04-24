@@ -567,7 +567,7 @@ class SourceFoldersDialog(QtWidgets.QDialog):
     def __init__(self, folders, parent=None):
         super(SourceFoldersDialog, self).__init__(parent)
 
-        self.setWindowTitle("Matcap Source Folders")
+        self.setWindowTitle("Matcap 源文件夹")
         self.setMinimumSize(
             int(dpi_scale(500)),
             int(dpi_scale(300)),
@@ -584,7 +584,7 @@ class SourceFoldersDialog(QtWidgets.QDialog):
         # Buttons
         btn_layout = QtWidgets.QHBoxLayout()
 
-        self.add_btn = QtWidgets.QPushButton("Add Folder")
+        self.add_btn = QtWidgets.QPushButton("添加文件夹")
         self.add_btn.setIcon(
             QtGui.QIcon(
                 pyqt.get_icon("mgear_folder-plus", _ICON_SIZE)
@@ -593,7 +593,7 @@ class SourceFoldersDialog(QtWidgets.QDialog):
         self.add_btn.clicked.connect(self._add_folder)
         btn_layout.addWidget(self.add_btn)
 
-        self.remove_btn = QtWidgets.QPushButton("Remove")
+        self.remove_btn = QtWidgets.QPushButton("移除")
         self.remove_btn.setIcon(
             QtGui.QIcon(
                 pyqt.get_icon("mgear_folder-minus", _ICON_SIZE)
@@ -604,11 +604,11 @@ class SourceFoldersDialog(QtWidgets.QDialog):
 
         btn_layout.addStretch()
 
-        self.up_btn = QtWidgets.QPushButton("Up")
+        self.up_btn = QtWidgets.QPushButton("上移")
         self.up_btn.clicked.connect(self._move_up)
         btn_layout.addWidget(self.up_btn)
 
-        self.down_btn = QtWidgets.QPushButton("Down")
+        self.down_btn = QtWidgets.QPushButton("下移")
         self.down_btn.clicked.connect(self._move_down)
         btn_layout.addWidget(self.down_btn)
 
@@ -617,9 +617,9 @@ class SourceFoldersDialog(QtWidgets.QDialog):
         # OK / Cancel
         dialog_btn_layout = QtWidgets.QHBoxLayout()
         dialog_btn_layout.addStretch()
-        ok_btn = QtWidgets.QPushButton("OK")
+        ok_btn = QtWidgets.QPushButton("确定")
         ok_btn.clicked.connect(self.accept)
-        cancel_btn = QtWidgets.QPushButton("Cancel")
+        cancel_btn = QtWidgets.QPushButton("取消")
         cancel_btn.clicked.connect(self.reject)
         dialog_btn_layout.addWidget(ok_btn)
         dialog_btn_layout.addWidget(cancel_btn)
@@ -639,7 +639,7 @@ class SourceFoldersDialog(QtWidgets.QDialog):
     def _add_folder(self):
         """Add a folder via directory browser."""
         folder = QtWidgets.QFileDialog.getExistingDirectory(
-            self, "Select Matcap Folder"
+            self, "选择 Matcap 文件夹"
         )
         if folder:
             existing = self.get_folders()
