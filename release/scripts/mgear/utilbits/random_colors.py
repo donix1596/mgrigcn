@@ -546,12 +546,11 @@ class RandomColorTool(QtWidgets.QWidget):
         options_layout.addWidget(self.reuse_materials_cb)
 
         self.apply_to_all_cb = QtWidgets.QCheckBox(
-            "Apply to all (scene mesh + NURBS)"
+            "应用到全部（场景中的网格 + NURBS）"
         )
         self.apply_to_all_cb.setChecked(False)
         self.apply_to_all_cb.setToolTip(
-            "When checked, ignore selection and apply to every "
-            "mesh and NURBS surface in the scene."
+            "勾选后，将忽略当前选择，对场景中所有网格和NURBS表面应用颜色。"
         )
         options_layout.addWidget(self.apply_to_all_cb)
 
@@ -596,11 +595,10 @@ class RandomColorTool(QtWidgets.QWidget):
         """)
         action_layout.addWidget(self.apply_btn, 2)
 
-        self.toggle_btn = QtWidgets.QPushButton("Toggle")
+        self.toggle_btn = QtWidgets.QPushButton("切换")
         self.toggle_btn.setMinimumHeight(40)
         self.toggle_btn.setToolTip(
-            "Toggle between random colors and the original "
-            "materials on all tracked objects."
+            "在随机颜色和所有跟踪对象的原始材质之间切换。"
         )
         action_layout.addWidget(self.toggle_btn, 1)
 
@@ -831,15 +829,15 @@ class RandomColorTool(QtWidgets.QWidget):
         result = toggle_random_colors()
         if result == "off":
             self.status_label.setText(
-                f"Originals restored on {len(_tracked_objects)} object(s)"
+                f"已恢复 {len(_tracked_objects)} 个对象的原始材质"
             )
         elif result == "on":
             self.status_label.setText(
-                f"Random colors reapplied to {len(_tracked_objects)} object(s)"
+                f"已重新应用随机颜色到 {len(_tracked_objects)} 个对象"
             )
         else:
             self.status_label.setText(
-                "Nothing tracked yet - click Apply first."
+                "尚未跟踪任何对象 - 请先点击应用。"
             )
 
     def on_remove(self):
