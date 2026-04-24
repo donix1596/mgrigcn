@@ -748,7 +748,7 @@ def _build_rig_from_model(
     """
 
     suf = "_{}".format(string.removeInvalidCharacter(suffix))
-    pm.displayInfo("Searching elements using suffix: {}".format(suf))
+    pm.displayInfo("正在使用后缀搜索元素: {}".format(suf))
 
     parent_dict = {}
     local_ctl = _create_simple_rig_root(
@@ -1049,8 +1049,7 @@ def _auto_skin_driven(driven, jnt, claimed):
             skins.append(sc)
         except RuntimeError:
             pm.displayWarning(
-                "Automatic skinning, can't be created for"
-                " {}. Skipped.".format(shp.name())
+                "自动蒙皮无法为 {} 创建。已跳过。".format(shp.name())
             )
     return skins
 
@@ -1204,8 +1203,7 @@ def _delete_pivot(dagNode):
         # Check the ctl is reset
         if not _is_in_npo(dagNode):
             pm.displayWarning(
-                "{}: have SRT values. Reset, before edit "
-                "elements".format(dagNode)
+                "{}: 具有SRT值。请先重置，再编辑元素。".format(dagNode)
             )
             return
         children = dagNode.listRelatives(type="transform")
@@ -1238,8 +1236,7 @@ def _parent_pivot(pivot, parent):
             # Check the ctl is reset
             if not _is_in_npo(pivot):
                 pm.displayWarning(
-                    "{}: have SRT values. Reset, before edit "
-                    "elements".format(pivot)
+                    "{}: 具有SRT值。请先重置，再编辑元素。".format(pivot)
                 )
             npo = pivot.getParent()
             attribute.unlockAttribute(npo)
@@ -1253,13 +1250,11 @@ def _parent_pivot(pivot, parent):
             pm.select(clear=True)
         else:
             pm.displayWarning(
-                "The selected Pivot: {} is not a "
-                "valid simple rig ctl.".format(parent.name())
+                "所选轴心点: {} 不是有效的简单装配控制器。".format(parent.name())
             )
     else:
         pm.displayWarning(
-            "The selected parent: {} is not a "
-            "valid simple rig ctl.".format(parent.name())
+            "所选父对象: {} 不是有效的简单装配控制器。".format(parent.name())
         )
 
 
@@ -1278,7 +1273,7 @@ def _edit_pivot_position(ctl):
 
     if not _is_in_npo(ctl):
         pm.displayWarning(
-            "The control: {} should be in reset" " position".format(ctl.name())
+            "控制器: {} 需要处于重置位置。".format(ctl.name())
         )
         return
     if not ctl.attr("edit_mode").get():
@@ -1295,8 +1290,7 @@ def _edit_pivot_position(ctl):
         pm.select(ctl)
     else:
         pm.displayWarning(
-            "The control: {} Is already in"
-            " Edit pivot Mode".format(ctl.name())
+            "控制器: {} 已处于编辑轴心点模式。".format(ctl.name())
         )
         return
 
@@ -1338,7 +1332,7 @@ def _consolidate_pivot_position(ctl):
         pm.select(ctl)
     else:
         pm.displayWarning(
-            "The control: {} Is NOT in" " Edit pivot Mode".format(ctl.name())
+            "控制器: {} 未处于编辑轴心点模式。".format(ctl.name())
         )
 
 
@@ -1351,12 +1345,12 @@ def _delete_rig():
     rig = _get_simple_rig_root()
     if rig:
         confirm = pm.confirmDialog(
-            title="Confirm Delete Simple Rig",
-            message="Are you sure?",
-            button=["Yes", "No"],
-            defaultButton="Yes",
-            cancelButton="No",
-            dismissString="No",
+            title="确认删除简单装配",
+            message="确定要删除吗？",
+            button=["是", "否"],
+            defaultButton="是",
+            cancelButton="否",
+            dismissString="否",
         )
         if confirm == "Yes":
             children = rig.listRelatives(allDescendents=True, type="transform")
@@ -1370,17 +1364,14 @@ def _delete_rig():
                         not_npo.append(c.name())
             if not_npo:
                 pm.displayWarning(
-                    "Please set all the controls to reset "
-                    "position before delete rig. The following"
-                    " controls are not "
-                    "reset:{}".format(str(not_npo))
+                    "删除装配前请将所有控制器重置为初始位置。以下控制器未重置:{}".format(str(not_npo))
                 )
                 return
             for c in to_delete:
                 _delete_pivot(c)
             pm.delete(rig)
     else:
-        pm.displayWarning("No rig found to delete!")
+        pm.displayWarning("没有找到可删除的装配！")
 
 
 # utils ===========================================
@@ -1450,8 +1441,7 @@ def _is_in_npo(dagNode):
         if val != 0.0:
             npo_status = False
             pm.displayWarning(
-                "{}.{} is not neutral! Value is {}, "
-                "but should be {}".format(
+                "{}.{} 不在初始位置！值为 {}，应为 {}".format(
                     dagNode.name(), axis, str(val), "0.0"
                 )
             )
@@ -1460,8 +1450,7 @@ def _is_in_npo(dagNode):
         if val != 1.0:
             npo_status = False
             pm.displayWarning(
-                "{}.{} is not neutral! Value is {}, "
-                "but should be {}".format(
+                "{}.{} 不在初始位置！值为 {}，应为 {}".format(
                     dagNode.name(), axis, str(val), "1.0"
                 )
             )
@@ -1538,16 +1527,14 @@ def _connect_driven(driver, driven):
 
     if _is_valid_ctl(driven):
         pm.displayWarning(
-            "{} can't not be driven or connected to a ctl, "
-            "because is a simple rig control".format(driven)
+            "{} 不能被驱动或连接到控制器，因为它是简单装配控制器。".format(driven)
         )
         return
 
         # Check the ctl is reset
         if not _is_in_npo(driver):
             pm.displayWarning(
-                "{}: have SRT values. Reset, before connect "
-                "elements".format(driver)
+                "{}: 具有SRT值。请先重置，再连接元素。".format(driver)
             )
     # connect message of the matrix mul nodes to the driven.
     # So later is easy to delete
@@ -1759,7 +1746,7 @@ class simpleRigTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 name, side, icon, yZero=position, sets_config=sets_config
             )
         else:
-            pm.displayWarning("Name is not valid")
+            pm.displayWarning("名称无效")
 
     # @utils.one_undo
     def select_affected(self):
@@ -1800,7 +1787,7 @@ class simpleRigTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if oSel and len(oSel) == 1:
             _edit_pivot_position(oSel[0])
         else:
-            pm.displayWarning("Please select one ctl")
+            pm.displayWarning("请选择一个控制器")
 
     # @utils.one_undo
     def set_pivot(self):
@@ -1808,7 +1795,7 @@ class simpleRigTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if oSel and len(oSel) == 1:
             _consolidate_pivot_position(oSel[0])
         else:
-            pm.displayWarning("Please select one ctl")
+            pm.displayWarning("请选择一个控制器")
 
     # @utils.one_undo
     def delete_rig(self):
@@ -1843,7 +1830,7 @@ class simpleRigTool(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 w_shape=w_icon,
             )
         else:
-            pm.displayWarning("Please select root of the model")
+            pm.displayWarning("请选择模型的根节点")
 
     def export_config(self):
         export_configuration()
