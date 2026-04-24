@@ -14,7 +14,7 @@ VERSION = "1.0.0"
 
 try:
     from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
-except:
+except ImportError:
     class MayaQWidgetDockableMixin:
         pass
 
@@ -29,7 +29,7 @@ def om_get_mobject(node_path):
         sel = om2.MSelectionList()
         sel.add(node_path)
         return sel.getDependNode(0)
-    except:
+    except Exception:
         return None
 
 
@@ -39,7 +39,7 @@ def om_get_dag_path(node_path):
         sel = om2.MSelectionList()
         sel.add(node_path)
         return sel.getDagPath(0)
-    except:
+    except Exception:
         return None
 
 
@@ -47,7 +47,7 @@ def om_get_node_type(mobj):
     """Get node type name from MObject"""
     try:
         return mobj.apiTypeStr.replace('kPluginShape', 'mesh').replace('k', '').lower()
-    except:
+    except Exception:
         return None
 
 
@@ -56,7 +56,7 @@ def om_get_node_type_name(mobj):
     try:
         fn = om2.MFnDependencyNode(mobj)
         return fn.typeName
-    except:
+    except Exception:
         return 'unknown'
 
 
@@ -64,7 +64,7 @@ def om_is_shape(mobj):
     """Check if MObject is a shape node"""
     try:
         return mobj.hasFn(om2.MFn.kShape)
-    except:
+    except Exception:
         return False
 
 
@@ -82,7 +82,7 @@ def om_get_shapes(dag_path):
             shape_path = om2.MDagPath(dag_path)
             shape_path.extendToShapeDirectlyBelow(i)
             shapes.append(shape_path)
-    except:
+    except Exception:
         pass
     return shapes
 
@@ -97,7 +97,7 @@ def om_get_children(dag_path):
                 child_fn = om2.MFnDagNode(child_obj)
                 child_path = child_fn.getPath()
                 children.append(child_path)
-    except:
+    except Exception:
         pass
     return children
 
@@ -116,7 +116,7 @@ def om_get_visibility(dag_path):
         if plug.asBool():
             return 'visible'
         return 'hidden'
-    except:
+    except Exception:
         return 'locked'
 
 
@@ -216,7 +216,7 @@ def get_maya_icon(node_type):
                 if icon.isNull():
                     icon = None
 
-    except:
+    except Exception:
         pass
 
     # Final fallback: create text icon with first 2 letters
@@ -252,7 +252,7 @@ def get_node_icon_om(dag_path, node_path=None):
                             icon = get_maya_icon(shape_type)
                             if icon and not icon.isNull():
                                 return icon
-                    except:
+                    except Exception:
                         pass
 
         # Get icon for the node type
@@ -260,7 +260,7 @@ def get_node_icon_om(dag_path, node_path=None):
         if icon and not icon.isNull():
             return icon
 
-    except:
+    except Exception:
         pass
 
     # Return default transform icon or text icon
@@ -287,7 +287,7 @@ def get_node_icon(node):
                     return icon
 
         return get_maya_icon(node_type)
-    except:
+    except Exception:
         return get_maya_icon('transform')
 
 
@@ -1134,7 +1134,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                     dag_path = sel.getDagPath(i)
                     node = dag_path.fullPathName()
                     self.add_node(node, self.model.invisibleRootItem(), dag_path=dag_path)
-                except:
+                except Exception:
                     # Not a DAG node, skip
                     pass
         else:
@@ -1149,7 +1149,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                         if dag_path.length() == 1:
                             node = dag_path.fullPathName()
                             self.add_node(node, self.model.invisibleRootItem(), dag_path=dag_path)
-                    except:
+                    except Exception:
                         pass
                 dag_iter.next()
 
@@ -1183,11 +1183,11 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             is_shape = False
             try:
                 is_shape = cmds.objectType(node, isAType='shape')
-            except:
+            except Exception:
                 pass
             try:
                 node_type = cmds.nodeType(node)
-            except:
+            except Exception:
                 node_type = "unknown"
             vis_state = self.get_visibility_state(node)
             node_icon = get_node_icon(node)
@@ -1250,7 +1250,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                         continue
                     has_visible_children = True
                     break
-                except:
+                except Exception:
                     has_visible_children = True
                     break
 
@@ -1302,7 +1302,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                     child_is_shape = cmds.objectType(child, isAType='shape')
                     if child_is_shape and not self.show_shapes:
                         continue
-                except:
+                except Exception:
                     pass
                 self.add_node(child, parent_item, load_children=False)
 
@@ -1313,7 +1313,6 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
         """Handle click on connected node icon"""
         if node_path and cmds.objExists(node_path):
             cmds.select(node_path, replace=True)
-            print(f"Selected: {node_path}")
 
     def closeEvent(self, event):
         """Clean up application event filter on close"""
@@ -1405,36 +1404,27 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                     try:
                         mel.eval('evalDeferred "copyAEWindow"')
                     except Exception as e:
-                        print(f"Error opening AE copy: {e}")
+                        cmds.warning("无法打开属性编辑器复制: {}".format(e))
                 return
 
     def on_middle_click(self, index):
         """Handle middle click - select node and open Attribute Editor copy tab"""
-        print("Middle click triggered!")
-
         item = self.model.itemFromIndex(index)
         if not item:
-            print("No item found")
             return
 
         node = item.data(NODE_ROLE)
-        print(f"Node: {node}")
 
         if node and cmds.objExists(node):
             # Select the node
             cmds.select(node, replace=True)
-            print(f"Selected: {node}")
 
             # Open Attribute Editor with copy tab
             try:
-                # Open/focus Attribute Editor
                 mel.eval('openAEWindow')
-                print("Opened AE window")
-                # Create a copy tab for this node
                 mel.eval('AEaddCopyTab')
-                print("Added copy tab")
             except Exception as e:
-                print(f"Error opening Attribute Editor: {e}")
+                cmds.warning("无法打开属性编辑器: {}".format(e))
 
     def frame_in_hierarchy(self):
         """Expand tree to show selected Maya node"""
@@ -1482,7 +1472,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                     break
 
             if not found:
-                print(f"Node not found in tree: {node_path}")
+                cmds.warning("节点未在树中找到: {}".format(node_path))
                 return
 
         if found_item:
@@ -1498,8 +1488,6 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
 
             # Scroll horizontally to make sure item is visible
             self.scroll_to_item_horizontal(index)
-
-            print(f"Framed: {node_path}")
 
     def get_connected_nodes(self, node):
         """Get connected nodes like Attribute Editor shows"""
@@ -1655,7 +1643,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             if cmds.getAttr(f"{node}.visibility"):
                 return 'visible'
             return 'hidden'
-        except:
+        except Exception:
             return 'locked'
 
     def on_clicked(self, index):
@@ -1694,7 +1682,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             try:
                 current = cmds.getAttr(f"{clicked_node}.visibility")
                 target_visible = not current
-            except:
+            except Exception:
                 return
         else:
             return
@@ -1739,7 +1727,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
                     vis_item.setData(new_state, VIS_ROLE)
                     vis_item.setIcon(VIS_ICONS.get(new_state, VIS_ICONS['locked']))
                 except Exception as e:
-                    print(f"Error toggling visibility for {node}: {e}")
+                    cmds.warning("切换可见性失败 {}: {}".format(node, e))
 
     def update_attribute_editor(self, node):
         """Update Attribute Editor to show the node's main tab (only if AE is the active/raised tab)"""
@@ -1749,7 +1737,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             ae_is_raised = False
             try:
                 ae_is_raised = cmds.workspaceControl('AttributeEditor', q=True, r=True)
-            except:
+            except Exception:
                 pass
 
             if not ae_is_raised:
@@ -1761,7 +1749,7 @@ class XPlorer(MayaQWidgetDockableMixin, QtWidgets.QWidget):
             mel.eval('updateAE "%s"' % short_name)
             # Switch to the node's tab in the AE (shows transform, not shape)
             mel.eval('showEditorExact "%s"' % short_name)
-        except:
+        except Exception:
             pass
 
     def on_selection_changed(self, selected, deselected):

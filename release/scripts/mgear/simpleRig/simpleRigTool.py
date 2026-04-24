@@ -772,7 +772,6 @@ def _build_rig_from_model(
                     parent = parent_dict[d.getParent().name()]
                 else:
                     parent = local_ctl
-                print(d)
                 ctl = _create_custom_pivot(
                     name,
                     "C",

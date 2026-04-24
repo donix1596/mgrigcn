@@ -886,14 +886,14 @@ class RandomColorTool(QtWidgets.QWidget):
                     try:
                         cmds.delete(sg)
                         deleted_count += 1
-                    except:
+                    except Exception:
                         pass
 
             # Try to delete the material if it has no connections
             if not cmds.listConnections(mat, type='shadingEngine'):
                 try:
                     cmds.delete(mat)
-                except:
+                except Exception:
                     pass
 
         self.status_label.setText(f"已清理 {deleted_count} 个未使用的材质")
@@ -906,7 +906,7 @@ def show():
     try:
         random_color_tool_window.close()
         random_color_tool_window.deleteLater()
-    except:
+    except Exception:
         pass
 
     random_color_tool_window = RandomColorTool()
