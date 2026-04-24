@@ -35,7 +35,8 @@ _TRANSFORM_ATTRS = (
 )
 DEFAULT_GROUP_NAME = "Default Group"
 CONFIG_FILE_EXT = ".evp"
-CONFIG_VERSION = "1.0"
+CONFIG_VERSION = "2.0"
+LEGACY_CONFIG_VERSION = "1.0"
 
 
 # =====================================================
@@ -350,6 +351,73 @@ def get_short_name(name):
         str: Short name without path (e.g., "pCube1").
     """
     return name.split("|")[-1]
+
+
+def resolve_mesh_short_name(name):
+    """Resolve a mesh name to a unique long DAG path.
+
+    Accepts either a short name (``"body"``) or a partial/long DAG
+    path (``"|rig|geo|body"``) — anything ``cmds.ls`` would match.
+
+    Args:
+        name (str): Mesh transform name to resolve.
+
+    Returns:
+        str: Long DAG path of the single matching mesh transform.
+
+    Raises:
+        RuntimeError: If zero or more than one mesh transform matches.
+    """
+    matches = cmds.ls(name, long=True, type="transform") or []
+    matches = [
+        m for m in matches
+        if cmds.listRelatives(m, shapes=True, type="mesh", fullPath=True)
+    ]
+    if not matches:
+        raise RuntimeError(
+            "No mesh named '{}' found in scene.".format(name)
+        )
+    if len(matches) > 1:
+        raise RuntimeError(
+            "Mesh name '{}' is ambiguous - matches: {}".format(
+                name, ", ".join(matches)
+            )
+        )
+    return matches[0]
+
+
+def resolve_config_mesh(config):
+    """Resolve the target mesh from a loaded ``.evp`` config dict.
+
+    Centralizes the v1.0 / v2.0 dispatch so the core loader and the
+    UI loader stay in lockstep.
+
+    v1.0 stores the long DAG path in ``mesh`` and may carry a
+    redundant ``mesh_short_name``; the long path is preferred when it
+    still resolves, otherwise the short name is looked up.  v2.0+
+    stores the short name directly in ``mesh``.
+
+    Args:
+        config (dict): Loaded ``.evp`` configuration.
+
+    Returns:
+        str: Long DAG path of the resolved mesh, or empty string if
+            the config has no ``mesh`` field.
+
+    Raises:
+        RuntimeError: If the short-name lookup is ambiguous or the
+            mesh is no longer in the scene.
+    """
+    config_mesh = config.get("mesh")
+    if not config_mesh:
+        return ""
+
+    version = config.get("version", LEGACY_CONFIG_VERSION)
+    if version == LEGACY_CONFIG_VERSION and cmds.objExists(config_mesh):
+        return config_mesh
+
+    short = config.get("mesh_short_name") or get_short_name(config_mesh)
+    return resolve_mesh_short_name(short)
 
 
 def names_match(name1, name2):
@@ -2150,14 +2218,14 @@ def execute_full_pipeline(manager):
         # Re-resolve source mesh path in case DAG
         # changed during split.
         if not cmds.objExists(source):
-            short = get_short_name(source)
-            resolved = cmds.ls(short, long=True)
-            if resolved:
-                source = resolved[0]
-            else:
+            try:
+                source = resolve_mesh_short_name(
+                    get_short_name(source)
+                )
+            except RuntimeError as e:
                 cmds.warning(
-                    "Source mesh no longer exists "
-                    "after split."
+                    "Could not re-resolve source mesh "
+                    "after split: {}".format(e)
                 )
                 return grp, partitions, None
 
@@ -2337,8 +2405,7 @@ def manager_to_config(manager):
     """
     return {
         "version": CONFIG_VERSION,
-        "mesh": manager.mesh,
-        "mesh_short_name": manager._mesh_short_name,
+        "mesh": manager._mesh_short_name,
         "groups": [group_to_dict(g) for g in manager.groups],
     }
 
@@ -2401,7 +2468,7 @@ def apply_configuration(config, mesh=None, create_shaders=True):
 
     Example:
         >>> config = {
-        ...     "version": "1.0",
+        ...     "version": "2.0",
         ...     "mesh": "pCube1",
         ...     "groups": [
         ...         {"name": "Default Group", "color": [0.5, 0.6, 0.7], "face_indices": [0, 1, 2]},
@@ -2410,13 +2477,15 @@ def apply_configuration(config, mesh=None, create_shaders=True):
         ... }
         >>> manager = apply_configuration(config)
     """
-    target_mesh = mesh or config.get("mesh")
+    target_mesh = mesh
     if not target_mesh:
-        cmds.warning("配置中未指定网格。")
-        return None
+        target_mesh = resolve_config_mesh(config)
+        if not target_mesh:
+            cmds.warning("配置中未指定网格。")
+            return None
 
     if not cmds.objExists(target_mesh):
-        cmds.warning(f"网格 '{target_mesh}' 不存在。")
+        cmds.warning("网格 '{}' 不存在。".format(target_mesh))
         return None
 
     # Create manager
@@ -2474,7 +2543,7 @@ def execute_from_config(config, mesh=None):
 
     Example:
         >>> config = {
-        ...     "version": "1.0",
+        ...     "version": "2.0",
         ...     "mesh": "pSphere1",
         ...     "groups": [
         ...         {"name": "Default Group", "color": [0.6, 0.7, 0.6], "face_indices": list(range(100))},

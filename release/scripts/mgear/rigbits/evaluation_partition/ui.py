@@ -584,8 +584,14 @@ class EvaluationPartitionUI(
             self.set_status("Import failed", error=True)
             return
 
-        # Get mesh from config or current input
-        mesh = config.get("mesh", "")
+        # Resolve the config mesh to a long DAG path so the mismatch
+        # dialog and downstream cmds.objExists check both work with
+        # the canonical name.
+        try:
+            mesh = core.resolve_config_mesh(config)
+        except RuntimeError as e:
+            self.set_status(str(e), error=True)
+            return
         current_mesh = self.mesh_input.text().strip()
 
         # If current mesh is set and different from config, ask user
