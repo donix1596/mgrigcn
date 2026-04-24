@@ -163,22 +163,22 @@ class ChannelTable(QtWidgets.QTableWidget):
         self.menu.addSeparator()
 
         self.menu.addSeparator()
-        set_color_action = QtWidgets.QAction("Set Color", self)
+        set_color_action = QtWidgets.QAction("设置颜色", self)
         set_color_action.setIcon(pyqt.get_icon("mgear_edit-2"))
         set_color_action.triggered.connect(self.set_color_slot)
         self.menu.addAction(set_color_action)
 
-        auto_color_host_action = QtWidgets.QAction("Auto Color by Host", self)
+        auto_color_host_action = QtWidgets.QAction("按宿主自动设置颜色", self)
         auto_color_host_action.setIcon(pyqt.get_icon("mgear_edit-3"))
         auto_color_host_action.triggered.connect(self.auto_color_host_slot)
         self.menu.addAction(auto_color_host_action)
 
-        auto_color_axis_action = QtWidgets.QAction("Auto Color by Axis", self)
+        auto_color_axis_action = QtWidgets.QAction("按轴自动设置颜色", self)
         auto_color_axis_action.setIcon(pyqt.get_icon("mgear_edit-3"))
         auto_color_axis_action.triggered.connect(self.auto_color_axis_slot)
         self.menu.addAction(auto_color_axis_action)
 
-        clear_color_action = QtWidgets.QAction("Clear Color", self)
+        clear_color_action = QtWidgets.QAction("清除颜色", self)
         clear_color_action.setIcon(pyqt.get_icon("mgear_x-octagon"))
         clear_color_action.triggered.connect(self.clear_color_slot)
         self.menu.addAction(clear_color_action)
@@ -601,12 +601,12 @@ class ChannelTable(QtWidgets.QTableWidget):
         # right click menu
         pop_menu = QtWidgets.QMenu(button)
 
-        next_key_action = QtWidgets.QAction("Next Keyframe", button)
+        next_key_action = QtWidgets.QAction("下一关键帧", button)
         next_key_action.setIcon(pyqt.get_icon("mgear_arrow-right"))
         next_key_action.triggered.connect(partial(cmu.next_keyframe, attr))
         pop_menu.addAction(next_key_action)
 
-        previous_key_action = QtWidgets.QAction("previous Keyframe", button)
+        previous_key_action = QtWidgets.QAction("上一关键帧", button)
         previous_key_action.setIcon(pyqt.get_icon("mgear_arrow-left"))
         previous_key_action.triggered.connect(
             partial(cmu.previous_keyframe, attr)
@@ -615,7 +615,7 @@ class ChannelTable(QtWidgets.QTableWidget):
 
         pop_menu.addSeparator()
 
-        remove_animation_action = QtWidgets.QAction("Remove Animation", button)
+        remove_animation_action = QtWidgets.QAction("删除动画", button)
         remove_animation_action.setIcon(pyqt.get_icon("mgear_trash"))
         remove_animation_action.triggered.connect(
             partial(cmu.remove_animation, attr)
@@ -779,7 +779,7 @@ class SetRangeDialog(QtWidgets.QDialog):
     def __init__(self, init_range=None, parent=None):
         super(SetRangeDialog, self).__init__(parent)
 
-        self.setWindowTitle("Set Range")
+        self.setWindowTitle("设置范围")
         flags = self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint
         self.setWindowFlags(flags)
 
@@ -802,13 +802,13 @@ class SetRangeDialog(QtWidgets.QDialog):
             self.min_spinbox.setValue(self.init_range[0])
             self.max_spinbox.setValue(self.init_range[1])
 
-        self.ok_btn = QtWidgets.QPushButton("OK")
+        self.ok_btn = QtWidgets.QPushButton("确定")
 
     def create_layout(self):
         wdg_layout = QtWidgets.QHBoxLayout()
-        wdg_layout.addWidget(QtWidgets.QLabel("Min: "))
+        wdg_layout.addWidget(QtWidgets.QLabel("最小值: "))
         wdg_layout.addWidget(self.min_spinbox)
-        wdg_layout.addWidget(QtWidgets.QLabel("Max: "))
+        wdg_layout.addWidget(QtWidgets.QLabel("最大值: "))
         wdg_layout.addWidget(self.max_spinbox)
 
         btn_layout = QtWidgets.QHBoxLayout()
@@ -849,10 +849,10 @@ class NameDialog(QtWidgets.QDialog):
         self.name_lineEdit.installEventFilter(self)
 
     def create_widgets(self):
-        self.name_label = QtWidgets.QLabel("Name: ")
+        self.name_label = QtWidgets.QLabel("名称: ")
         self.name_lineEdit = QtWidgets.QLineEdit()
 
-        self.ok_btn = QtWidgets.QPushButton("OK")
+        self.ok_btn = QtWidgets.QPushButton("确定")
 
     def create_layout(self):
         wdg_layout = QtWidgets.QHBoxLayout()
@@ -893,7 +893,7 @@ class CreateChannelMasterNodeDialog(NameDialog):
     def __init__(self, parent=None):
         super(CreateChannelMasterNodeDialog, self).__init__(parent)
 
-        self.setWindowTitle("Node Name")
+        self.setWindowTitle("节点名称")
 
 
 class CreateChannelMasterTabDialog(NameDialog):
@@ -904,4 +904,4 @@ class CreateChannelMasterTabDialog(NameDialog):
     def __init__(self, parent=None):
         super(CreateChannelMasterTabDialog, self).__init__(parent)
 
-        self.setWindowTitle("Tab Name")
+        self.setWindowTitle("选项卡名称")
